@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>React &amp; TypeScript Quiz — Answer Check</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root{
+    --bg: #14151f;
+    --panel: #1c1e2b;
+    --panel-2: #232538;
+    --line: #32354a;
+    --text: #e7e8f3;
+    --muted: #8c8fae;
+    --ts-accent: #3ba6ff;
+    --js-accent: #f2b134;
+    --good: #34d399;
+    --bad: #f87171;
+    --good-bg: rgba(52,211,153,.12);
+    --bad-bg: rgba(248,113,113,.12);
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 15% 0%, rgba(59,166,255,.08), transparent 45%),
+      radial-gradient(circle at 90% 10%, rgba(242,177,52,.06), transparent 40%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    padding-bottom:80px;
+  }
+
+  /* ---- Top "IDE" bar ---- */
+  .topbar{
+    background:var(--panel);
+    border-bottom:1px solid var(--line);
+    position:sticky; top:0; z-index:10;
+  }
+  .topbar-dots{
+    display:flex; gap:7px; padding:12px 18px 0 18px;
+  }
+  .topbar-dots span{width:11px;height:11px;border-radius:50%;display:inline-block;}
+  .dot-r{background:#ff5f56;} .dot-y{background:#ffbd2e;} .dot-g{background:#27c93f;}
+
+  .tabs{ display:flex; gap:2px; padding:10px 12px 0 12px; }
+  .tab{
+    font-family:var(--mono); font-size:13px; color:var(--muted);
+    padding:8px 16px; border-radius:8px 8px 0 0; cursor:pointer;
+    border:1px solid transparent; border-bottom:none;
+    transition:.15s;
+  }
+  .tab.active{ background:var(--bg); color:var(--text); border-color:var(--line); }
+  .tab .dotfile{opacity:.6;margin-right:6px;}
+
+  header.hero{
+    padding:46px 24px 30px;
+    max-width:920px; margin:0 auto;
+  }
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--js-accent);
+    display:flex; align-items:center; gap:8px;
+  }
+  .eyebrow::before{content:"//"; color:var(--muted);}
+  h1{
+    font-size:clamp(28px,4.2vw,42px); line-height:1.1; margin:10px 0 12px;
+    font-weight:800; letter-spacing:-.01em;
+  }
+  h1 span{color:var(--ts-accent);}
+  .sub{ color:var(--muted); max-width:620px; line-height:1.6; font-size:15px; }
+
+  .score-bar{
+    max-width:920px; margin:0 auto 6px; padding:0 24px;
+    display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  }
+  .score-pill{
+    font-family:var(--mono); font-size:14px; background:var(--panel);
+    border:1px solid var(--line); padding:10px 16px; border-radius:10px;
+    color:var(--text);
+  }
+  .score-pill b{color:var(--good);}
+  .actions{ display:flex; gap:10px; }
+  button.primary, button.ghost{
+    font-family:var(--mono); font-size:13px; font-weight:600;
+    padding:11px 20px; border-radius:10px; cursor:pointer; border:1px solid var(--line);
+    transition:.15s;
+  }
+  button.primary{ background:var(--ts-accent); color:#0b1220; border-color:var(--ts-accent); }
+  button.primary:hover{ filter:brightness(1.08); }
+  button.ghost{ background:transparent; color:var(--muted); }
+  button.ghost:hover{ color:var(--text); border-color:var(--muted); }
+
+  main{ max-width:920px; margin:0 auto; padding:20px 24px 0; }
+  .section-title{
+    font-family:var(--mono); font-size:13px; color:var(--muted);
+    margin:38px 0 14px; padding-bottom:8px; border-bottom:1px dashed var(--line);
+    letter-spacing:.05em;
+  }
+  .section-title b{ color:var(--text); }
+
+  .qcard{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:20px 22px; margin-bottom:16px; scroll-margin-top:120px;
+  }
+  .qhead{ display:flex; gap:12px; align-items:baseline; margin-bottom:12px; }
+  .qnum{
+    font-family:var(--mono); font-size:12px; color:var(--bg); background:var(--muted);
+    padding:2px 8px; border-radius:6px; flex-shrink:0; font-weight:700;
+  }
+  .js-tag .qnum{ background:var(--js-accent); }
+  .ts-tag .qnum{ background:var(--ts-accent); color:#0b1220;}
+  .qtext{ font-size:15.5px; line-height:1.55; font-weight:600; }
+  .qcode{
+    font-family:var(--mono); font-size:13.5px; background:var(--panel-2);
+    border:1px solid var(--line); border-radius:8px; padding:10px 12px;
+    margin:8px 0 14px; white-space:pre-wrap; color:#c7cae8;
+  }
+
+  .opts{ display:flex; flex-direction:column; gap:8px; }
+  .opt{
+    display:flex; align-items:flex-start; gap:10px;
+    padding:10px 12px; border-radius:9px; border:1px solid var(--line);
+    background:var(--panel-2); cursor:pointer; transition:.12s;
+    font-family:var(--mono); font-size:13.5px; line-height:1.5;
+  }
+  .opt:hover{ border-color:var(--muted); }
+  .opt input{ margin-top:3px; accent-color:var(--ts-accent); flex-shrink:0; }
+  .opt .letter{ color:var(--muted); font-weight:700; margin-right:2px; }
+  .opt.selected{ border-color:var(--ts-accent); background:rgba(59,166,255,.08); }
+
+  .opt.correct-answer{ border-color:var(--good); background:var(--good-bg); }
+  .opt.correct-answer .letter{ color:var(--good); }
+  .opt.wrong-answer{ border-color:var(--bad); background:var(--bad-bg); }
+  .opt.wrong-answer .letter{ color:var(--bad); }
+
+  .result-tag{
+    display:none; font-family:var(--mono); font-size:12px; margin-top:12px;
+    padding:8px 10px; border-radius:8px; align-items:center; gap:8px;
+  }
+  .result-tag.show{ display:flex; }
+  .result-tag.ok{ background:var(--good-bg); color:var(--good); }
+  .result-tag.no{ background:var(--bad-bg); color:var(--bad); }
+  .result-tag.unanswered{ background:rgba(140,143,174,.12); color:var(--muted); }
+
+  .note{
+    margin-top:12px; font-size:13px; line-height:1.55; color:var(--js-accent);
+    background:rgba(242,177,52,.08); border:1px solid rgba(242,177,52,.3);
+    padding:10px 12px; border-radius:9px;
+  }
+  .note b{ color:var(--text); }
+
+  footer{
+    max-width:920px; margin:40px auto 0; padding:0 24px 40px; color:var(--muted);
+    font-size:13px; line-height:1.6; font-family:var(--mono);
+  }
+
+  .float-check{
+    position:fixed; bottom:22px; right:22px; z-index:20;
+  }
+  @media (max-width:600px){
+    .float-check{ position:static; margin-top:24px; text-align:center; }
+    header.hero{padding:34px 16px 20px;}
+    main{padding:16px 16px 0;}
+  }
+  :focus-visible{ outline:2px solid var(--ts-accent); outline-offset:2px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+  <div class="tabs">
+    <div class="tab active" data-target="all"><span class="dotfile">●</span>quiz.answers.tsx</div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="eyebrow">answer key verification</div>
+  <h1>React / Flux quiz &amp; <span>TypeScript</span> quiz — graded</h1>
+  <p class="sub">All 44 questions from your file, with the given answer key pre-checked against reference knowledge.
+  Pick your own answers and hit <b>Check my answers</b> — correct options light up green, wrong picks light up red.
+  Two answers in the original key looked off; they're flagged with a note instead of silently "corrected."</p>
+</header>
+
+<div class="score-bar">
+  <div class="score-pill">Score: <b id="scoreDisplay">0 / 44</b></div>
+  <div class="actions">
+    <button class="primary" id="checkBtn">▸ Check my answers</button>
+    <button class="ghost" id="revealBtn">Show answer key</button>
+    <button class="ghost" id="resetBtn">Reset</button>
+  </div>
+</div>
+
+<main id="quizRoot"></main>
+
+<footer>
+  // Flags: Q6 (JS section) and TS-Q8 have a note — the file's given letter doesn't match the best technical answer among the listed options.
+</footer>
+
+<script>
+const DATA = {
+  js: {
+    label: "React / Express / Flux / Gulp",
+    tagClass: "js-tag",
+    questions: [
+      {q:'The string "api/route" in Express is an example of a...', opts:{A:"Middleware",B:"Route",C:"Error Handler"}, ans:"B"},
+      {q:'Which library allows the use of the "require" keyword in front-end code?', opts:{A:"guid",B:"Browserify",C:"React",D:"jQuery"}, ans:"B"},
+      {q:'The ______ attribute of a React form is called when the main action button inside the form is pressed.', opts:{A:"onSubmit",B:"onChange",C:"onComplete"}, ans:"A"},
+      {q:'Which of the following are automation tools?', opts:{A:"Gulp",B:"JSX",C:"Express"}, ans:"A"},
+      {q:'Which of the following is not a method of a dispatcher?', opts:{A:"register",B:"vector",C:"dispatch"}, ans:"B"},
+      {q:'What React function is used to define a new element tag?', opts:{A:"renderComponent",B:"createClass",C:"setInnerHTML"}, ans:"B",
+        note:"Strictly speaking, React uses <b>React.createElement()</b> to define/create element tags — that's what JSX compiles to. None of the three listed options is technically it; <b>createClass</b> (the given key) actually defines a *component*, not an element. Keeping the file's original key here since createClass is the closest fit among the choices given."},
+      {q:'Isomorphic means to focus exclusively on an app\'s back-end.', opts:{A:"True",B:"False"}, ans:"B"},
+      {q:'React\'s abstraction of the document object model is often called...', opts:{A:"Virtual DOM",B:"Meta DOM",C:"Virtualized Model"}, ans:"A"},
+      {q:'True or false: The only thing that can change the data inside a store is the store itself.', opts:{A:"false",B:"true"}, ans:"B"},
+      {q:'The Gulp task which takes a stream and outputs a file is...', opts:{A:"src",B:"task",C:"dest"}, ans:"C"},
+      {q:'The best way to detect when a user has completed a form is', opts:{A:"to handle the onClick event on the form's submit element",B:"to handle the onBlur event of the last form element",C:"to handle the form's onSubmit event",D:"to accumulate the onChange events for each form element"}, ans:"C"},
+      {q:'React is', opts:{A:"A library that represents asynchronous data streams with observables",B:"A comprehensive client-side application framework",C:"An optimizing compiler for JavaScript",D:"A client-side library providing rendering and event handling"}, ans:"D"},
+      {q:'Routing can be added to a React application by', opts:{A:"adding an HTML5 or hash fragment based routing library",B:"rendering the application on the server using react-page",C:"handling the window.onLocationChanged event",D:"using the React.route function"}, ans:"A"},
+      {q:'Behavior is shared between components using', opts:{A:"propTypes",B:"state",C:"mixins",D:"props"}, ans:"C"},
+      {q:'An advantage of React is', opts:{A:"jQuery syntax",B:"static type checking",C:"speed",D:"easy integration with other JavaScript libraries"}, ans:"C"},
+      {q:'The JSX pre-processor is packaged as a', opts:{A:"dynamic link library",B:"Nuget package",C:"Gem",D:"npm module"}, ans:"D"},
+      {q:'The just-in-time JSX transformer is good for', opts:{A:"integrating with JavaScript tools",B:"simple development workflow",C:"reusing behavior",D:"performance"}, ans:"B"},
+      {q:'The function that creates React components is', opts:{A:"React.component.extend",B:"React.createComponent",C:"React.renderComponent",D:"React.createClass"}, ans:"D"},
+      {q:'How does React Router make URL params accessible to components?', opts:{A:"parseUrlParams",B:"State",C:"getUrlParams",D:"Props"}, ans:"D"},
+      {q:'Why is the Link component useful?', opts:{A:"It allows you to hyperlink to routes by name",B:"It enhances page load performance",C:"It removes invalid characters from the URL",D:"It provides faster navigation than hyperlinks"}, ans:"A"},
+      {q:'How do Flux stores find out about Flux actions?', opts:{A:"They query the server via AJAX",B:"They poll HTML5 localstorage",C:"They register a callback with the dispatcher.",D:"They call action creators directly"}, ans:"C"},
+      {q:'Where should mutable data for React components be stored?', opts:{A:"props",B:"reactData",C:"state",D:"React.cookie"}, ans:"C"},
+      {q:'What mechanism is recommended for passing data down to child components in React?', opts:{A:"props",B:"sendChildData",C:"getDefaultProps",D:"state"}, ans:"A"},
+      {q:'What is JSX?', opts:{A:"A language that looks like JavaScript that compiles to HTML.",B:"A styling language that compiles down to CSS.",C:"A language for querying RESTful web services.",D:"A language that looks like HTML that compiles down to JavaScript."}, ans:"D"},
+      {q:'What function should all your JSX be placed in?', opts:{A:"render",B:"compile",C:"jsx",D:"emit"}, ans:"A"},
+    ]
+  },
+  ts: {
+    label: "TypeScript",
+    tagClass: "ts-tag",
+    questions: [
+      {q:'Which features does TypeScript support natively?', opts:{A:"Support for standard JavaScript code",B:"Classes and modules",C:"Static typing",D:"Interfaces",E:"Constructors",F:"All of the above"}, ans:"F"},
+      {q:'Which of the following is not a type keyword in TypeScript?', opts:{A:"float",B:"bool",C:"all are valid types in TypeScript",D:"number",E:"string"}, ans:"A"},
+      {q:'Interfaces defined in TypeScript are included in the JavaScript that is generated?', opts:{A:"True",B:"False"}, ans:"B"},
+      {q:'How do you extend an interface in TypeScript?', opts:{A:"interface ITruckOptions extends IAutoOptions",B:"interface ITruckOptions => IAutoOptions",C:"interface ITruckOptions : IAutoOptions",D:"interface ITruckOptions implements IAutoOptions"}, ans:"A", code:true},
+      {q:'Benefits offered by TypeScript include:', opts:{A:"Code encapsulation",B:"All of these",C:"More maintainable code",D:"Strongly-typed code"}, ans:"B"},
+      {q:'How do you automatically generate fields in a TypeScript class?', opts:{A:"Add the public keyword to a constructor parameter",B:"None of these",C:"Use the auto keyword",D:"TypeScript doesn't support automatically generated fields"}, ans:"A"},
+      {q:'Which TypeScript function will accept 2 parameters that must be numbers and return their product?', opts:{A:"var func = (x: number, y: number) => x * y;",B:"var func = (x, y) => x * y;",C:"None of these",D:"var func = function(x, y) => x * y;",E:"All of these"}, ans:"A", code:true},
+      {q:'Which statement will allow your code to reference an internal module in a file named shapes.ts using TypeScript?', opts:{A:'/// <reference="shapes.ts" />',B:'/// <reference path="shapes.ts" />',C:'import "shapes"',D:'/// shapes.ts'}, ans:"C", code:true,
+        note:"The file's key says <b>C</b>, but for referencing an <i>internal</i> module/file (as opposed to importing an external module), the standard TypeScript mechanism is the triple-slash directive: <b>/// &lt;reference path=\"shapes.ts\" /&gt;</b> — option B. Option A is malformed (missing <code>path=</code>), and <code>import \"shapes\"</code> is external-module import syntax. Flagging B as the technically correct answer."},
+      {q:'Which TypeScript statement will import an external module in a file named viewmodels.ts that is in the same folder as your code?', opts:{A:"import vm = module(viewmodels);",B:"import vm = module('../viewmodels');",C:"import module('viewmodels');",D:"import vm = module('viewmodels');"}, ans:"D", code:true},
+      {q:'Which TypeScript compiler parameter will emit JavaScript that is AMD compliant?', opts:{A:"--AMD",B:"--module AMD",C:"Neither of these"}, ans:"B", code:true},
+      {q:'What keyword is used to apply all of the properties on one interface to another interface?', opts:{A:"implements",B:"extends",C:"class",D:"furthers",E:"references"}, ans:"B"},
+      {q:'What value will be output at the end of the following code block?', code2:"enum Color { Red = 5, Green = 10, Blue = 15 };\n\nconsole.log(Color.Green);", opts:{A:"2",B:"Color.Green",C:"1",D:"Green",E:"10"}, ans:"E"},
+      {q:'Which of the following best defines a "class"?', opts:{A:"Objects with no implementation details",B:"Object with no properties or methods",C:"JSON objects with methods",D:"Collection of private, reusable functions",E:"Template for creating objects"}, ans:"E"},
+      {q:'What term describes the concept of treating an object as if it were a particular type, even if it weren\'t declared as that type?', opts:{A:"Extension Typing",B:"Duck Typing",C:"Interface Typing",D:"Generic Typing",E:"Ruby Typing"}, ans:"B"},
+      {q:'What access modifier limits the accessibility of a class member to its own class and subclasses?', opts:{A:"export",B:"internal",C:"protected",D:"private",E:"sensitive"}, ans:"C"},
+      {q:'What is the primary difference between a generic class and a non-generic class?', opts:{A:"Generic classes do not accept constructor parameters.",B:"Generic classes are always declared abstract.",C:"Generic class may not implement interfaces.",D:"Generic classes accept a type parameter.",E:"Generic classes must inherit from a base class."}, ans:"D"},
+      {q:'Which TypeScript compiler option lets you specify the location of the tsconfig.json file to be used for the compilation?', opts:{A:"--project",B:"--json",C:"--outDir",D:"--input",E:"--source"}, ans:"A"},
+      {q:'Which of the following symbols is used to denote that a function parameter is a rest parameter?', opts:{A:"<>",B:">>>",C:"!!",D:"...",E:"||"}, ans:"D"},
+      {q:'Which of the following will correctly import the items exported by this export statement?', code2:"export { GetUser as GetLibraryUser, GetBook as GetLibraryBook };", opts:{A:"import TypeScript from './library';",B:"import namespace from './library';",C:"import { GetLibraryUser, GetLibraryBook } from './library';",D:"import { GetUser, GetBook } from './library';",E:"import all from './library';"}, ans:"C"},
+    ]
+  }
+};
+
+const root = document.getElementById('quizRoot');
+let total = 0;
+
+function render(){
+  let html = '';
+  ['js','ts'].forEach(secKey=>{
+    const sec = DATA[secKey];
+    html += `<div class="section-title">Section — <b>${sec.label}</b> (${sec.questions.length} questions)</div>`;
+    sec.questions.forEach((item, idx)=>{
+      total++;
+      const gid = `${secKey}-${idx}`;
+      html += `<div class="qcard ${sec.tagClass}" id="card-${gid}" data-group="${gid}" data-answer="${item.ans}">
+        <div class="qhead">
+          <span class="qnum">${total}</span>
+          <span class="qtext">${item.q}</span>
+        </div>
+        ${item.code2 ? `<div class="qcode">${item.code2.replace(/</g,'&lt;')}</div>` : ''}
+        <div class="opts">
+          ${Object.entries(item.opts).map(([letter, text])=>`
+            <label class="opt" data-letter="${letter}">
+              <input type="radio" name="${gid}" value="${letter}">
+              <span><span class="letter">${letter}.</span> ${text.replace(/</g,'&lt;')}</span>
+            </label>`).join('')}
+        </div>
+        <div class="result-tag" id="result-${gid}"></div>
+        ${item.note ? `<div class="note">${item.note}</div>` : ''}
+      </div>`;
+    });
+  });
+  root.innerHTML = html;
+
+  document.querySelectorAll('.opt').forEach(opt=>{
+    opt.addEventListener('click', ()=>{
+      const card = opt.closest('.qcard');
+      card.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+      opt.classList.add('selected');
+    });
+  });
+}
+
+function checkAnswers(){
+  let score = 0;
+  document.querySelectorAll('.qcard').forEach(card=>{
+    const gid = card.dataset.group;
+    const correct = card.dataset.answer;
+    const selected = card.querySelector(`input[name="${gid}"]:checked`);
+    const resultEl = document.getElementById(`result-${gid}`);
+    card.querySelectorAll('.opt').forEach(o=>{
+      o.classList.remove('correct-answer','wrong-answer');
+      const letter = o.dataset.letter;
+      if(letter === correct) o.classList.add('correct-answer');
+      if(selected && letter === selected.value && letter !== correct) o.classList.add('wrong-answer');
+    });
+    resultEl.classList.add('show');
+    if(!selected){
+      resultEl.className = 'result-tag show unanswered';
+      resultEl.textContent = `— not answered — correct: ${correct}`;
+    } else if(selected.value === correct){
+      score++;
+      resultEl.className = 'result-tag show ok';
+      resultEl.textContent = `✓ correct`;
+    } else {
+      resultEl.className = 'result-tag show no';
+      resultEl.textContent = `✗ your answer: ${selected.value} — correct: ${correct}`;
+    }
+  });
+  document.getElementById('scoreDisplay').textContent = `${score} / ${total}`;
+}
+
+function revealAll(){
+  document.querySelectorAll('.qcard').forEach(card=>{
+    const correct = card.dataset.answer;
+    card.querySelectorAll('.opt').forEach(o=>{
+      o.classList.remove('wrong-answer');
+      o.classList.toggle('correct-answer', o.dataset.letter === correct);
+    });
+  });
+}
+
+function reset(){
+  document.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false);
+  document.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected','correct-answer','wrong-answer'));
+  document.querySelectorAll('.result-tag').forEach(r=>{ r.classList.remove('show'); r.textContent=''; });
+  document.getElementById('scoreDisplay').textContent = `0 / ${total}`;
+}
+
+document.getElementById('checkBtn').addEventListener('click', checkAnswers);
+document.getElementById('revealBtn').addEventListener('click', revealAll);
+document.getElementById('resetBtn').addEventListener('click', reset);
+
+render();
+</script>
+</body>
+</html>
