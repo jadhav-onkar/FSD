@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCQ Review — Full Stack Interview Prep</title>
+<style>
+:root{
+  --bg:#0d1117;
+  --panel:#151b23;
+  --panel2:#1c232d;
+  --border:#2a323d;
+  --text:#e6edf3;
+  --dim:#8b96a5;
+  --mono:'JetBrains Mono','Fira Code',Consolas,monospace;
+  --sans:'Inter',-apple-system,Segoe UI,Roboto,sans-serif;
+  --ok:#3fb950;
+  --bad:#f85149;
+  --accent:#58a6ff;
+  --ts:#3178c6;
+  --mongo:#47A248;
+  --java:#f89820;
+  --angular:#dd0031;
+  --react:#61dafb;
+  --css:#2965f1;
+  --node:#68a063;
+  --angularjs:#b52e31;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(88,166,255,0.08), transparent 40%),
+    radial-gradient(circle at 85% 10%, rgba(71,162,72,0.06), transparent 40%),
+    var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  min-height:100vh;
+}
+header{
+  padding:28px 24px 20px;
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  background:rgba(13,17,23,0.92);
+  backdrop-filter:blur(8px);
+  z-index:20;
+}
+header h1{
+  margin:0 0 4px;
+  font-size:1.4rem;
+  font-family:var(--mono);
+  letter-spacing:-0.02em;
+}
+header h1 span{color:var(--accent);}
+header p{margin:0;color:var(--dim);font-size:0.88rem;}
+
+.topline{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+  margin-top:16px;
+}
+.scorebox{
+  font-family:var(--mono);
+  font-size:0.82rem;
+  background:var(--panel2);
+  border:1px solid var(--border);
+  padding:6px 12px;
+  border-radius:6px;
+  color:var(--dim);
+}
+.scorebox b{color:var(--accent);}
+.filters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:14px;
+}
+.filter-btn{
+  font-family:var(--mono);
+  font-size:0.76rem;
+  padding:6px 12px;
+  border-radius:20px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--dim);
+  cursor:pointer;
+  transition:all .15s ease;
+}
+.filter-btn:hover{border-color:var(--accent);color:var(--text);}
+.filter-btn.active{background:var(--accent);color:#0d1117;border-color:var(--accent);font-weight:600;}
+
+main{
+  max-width:880px;
+  margin:0 auto;
+  padding:24px 20px 80px;
+}
+
+.note-banner{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-left:3px solid var(--accent);
+  padding:14px 16px;
+  border-radius:6px;
+  font-size:0.85rem;
+  color:var(--dim);
+  margin-bottom:24px;
+  line-height:1.5;
+}
+.note-banner b{color:var(--text);}
+
+.qcard{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:20px 22px;
+  margin-bottom:16px;
+  transition:border-color .2s ease;
+}
+.qcard.answered{border-color:#333d4a;}
+
+.qmeta{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+}
+.badge{
+  font-family:var(--mono);
+  font-size:0.68rem;
+  padding:3px 9px;
+  border-radius:20px;
+  font-weight:600;
+  letter-spacing:0.02em;
+  color:#0d1117;
+  white-space:nowrap;
+}
+.qnum{
+  font-family:var(--mono);
+  color:var(--dim);
+  font-size:0.75rem;
+}
+.fixed-tag{
+  font-family:var(--mono);
+  font-size:0.66rem;
+  color:#ffab40;
+  border:1px solid #7a5218;
+  background:rgba(255,171,64,0.08);
+  padding:2px 8px;
+  border-radius:20px;
+}
+.multi-tag{
+  font-family:var(--mono);
+  font-size:0.66rem;
+  color:#c792ea;
+  border:1px solid #5a3d7a;
+  background:rgba(199,146,234,0.08);
+  padding:2px 8px;
+  border-radius:20px;
+}
+
+.qtext{
+  font-size:0.98rem;
+  line-height:1.5;
+  margin:0 0 14px;
+  white-space:pre-wrap;
+  font-family:var(--sans);
+}
+.qtext code, .qtext .codeblock{
+  font-family:var(--mono);
+  background:#0d1117;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:2px 5px;
+  font-size:0.85em;
+}
+
+.options{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.opt{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  cursor:pointer;
+  background:var(--panel2);
+  font-size:0.9rem;
+  line-height:1.4;
+  transition:all .12s ease;
+}
+.opt:hover{border-color:var(--accent);}
+.opt .letter{
+  font-family:var(--mono);
+  font-weight:700;
+  color:var(--dim);
+  min-width:18px;
+}
+.opt.correct{
+  border-color:var(--ok);
+  background:rgba(63,185,80,0.10);
+}
+.opt.correct .letter{color:var(--ok);}
+.opt.wrong{
+  border-color:var(--bad);
+  background:rgba(248,81,73,0.10);
+}
+.opt.wrong .letter{color:var(--bad);}
+.opt.disabled{cursor:default;}
+.opt .mark{margin-left:auto;font-family:var(--mono);font-size:0.75rem;}
+
+.explain{
+  margin-top:14px;
+  padding:12px 14px;
+  border-radius:8px;
+  background:#0d1117;
+  border:1px solid var(--border);
+  font-size:0.84rem;
+  color:var(--dim);
+  line-height:1.55;
+  display:none;
+}
+.explain.show{display:block;}
+.explain b{color:var(--text);}
+.explain .fixnote{
+  display:block;
+  margin-top:8px;
+  color:#ffab40;
+}
+
+footer{
+  text-align:center;
+  padding:30px 20px 50px;
+  color:var(--dim);
+  font-size:0.8rem;
+  font-family:var(--mono);
+}
+
+@media (max-width:600px){
+  header{padding:20px 16px;}
+  main{padding:18px 14px 60px;}
+  .qcard{padding:16px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>MCQ<span>://</span>review</h1>
+  <p>TypeScript · MongoDB · Node · Angular / AngularJS · React · Java &amp; JSP — click an option to check it against the correct answer</p>
+  <div class="topline">
+    <div class="scorebox">Answered <b id="answeredCount">0</b> / <span id="totalCount">0</span> &nbsp;·&nbsp; Correct <b id="correctCount" style="color:var(--ok)">0</b></div>
+    <div class="scorebox"><span id="resetBtn" style="cursor:pointer;color:var(--accent);">↺ reset all</span></div>
+  </div>
+  <div class="filters" id="filters"></div>
+</header>
+
+<main>
+  <div class="note-banner">
+    <b>How this works:</b> tap any option — it turns green if it's correct, red if it isn't, and the correct option is always revealed alongside a short explanation.
+    Questions from the original file that had <b>no answer options</b> have had plausible options added, marked with a <span style="color:#ffab40">fixed</span> tag.
+    A few source answers were factually wrong (e.g. TypeScript field generation, Node's EventEmitter methods, JSP's <code>session</code> implicit object type) — those have been corrected and explained.
+    Duplicate questions that appeared twice in the source file are shown once.
+  </div>
+  <div id="quiz"></div>
+</main>
+
+<footer>Generated from your uploaded question bank · works fully offline, no data leaves this page</footer>
+
+<script>
+const DATA = [
+// ---------------- TYPESCRIPT ----------------
+{c:"TypeScript", q:"How do you automatically generate fields in a TypeScript class from constructor parameters?",
+ o:["Add the public/private/readonly keyword to a constructor parameter","None of these","Use the auto keyword","TypeScript doesn't support automatically generated fields"],
+ a:0, e:"TypeScript's <b>parameter properties</b> feature: prefixing a constructor parameter with <code>public</code>, <code>private</code>, <code>protected</code>, or <code>readonly</code> automatically declares and initializes a class field with that value.",
+ fix:"The source (Copilot) answer said D, which is incorrect — this is a real, well-documented TS feature."},
+
+{c:"TypeScript", q:"To change the datatype from one type to another, we require:",
+ o:["TypeOperator","TypeAssertion","InferredTyping"], a:1,
+ e:"A <b>TypeAssertion</b> (e.g. <code>value as string</code>) tells the compiler to treat a value as a specific type."},
+
+{c:"TypeScript", q:"For a variable, without specifying any data type, TypeScript uses:",
+ o:["InferredTyping","TypeOperator","TypeAssertion"], a:0,
+ e:"TypeScript infers the type from the assigned value — this is <b>type inference</b>."},
+
+{c:"TypeScript", q:"Which of the following is a valid command to compile a TypeScript file?",
+ o:["ts abc.ts","t abc.ts","tsc abc.ts","tst abc.ts"], a:2,
+ e:"The TypeScript compiler executable is <code>tsc</code>."},
+
+{c:"TypeScript", q:'What is the result of:\nvar a: string = 47;\nconsole.log("Value of a=" + a);',
+ o:["Value of a=47","Value of a=0","Value of a=","None of the above — it's a compile-time error"], a:3,
+ e:"Assigning a <code>number</code> (47) to a variable typed <code>string</code> is a <b>compile-time type error</b> in TypeScript, so it never actually runs and prints anything.",
+ fix:"The source file gave two conflicting answers for this question (C in one place, D in another) — D is the technically correct one."},
+
+{c:"TypeScript", q:"Internal Modules are known as namespaces in TypeScript.",
+ o:["True","False"], a:0, e:"Correct — what used to be called \"internal modules\" were renamed to <b>namespaces</b>."},
+
+{c:"TypeScript", q:"function fun1(...params) { console.log(params.length); }\nfun1(); fun1(5); fun1(5, 6, 7);\nWhich concept does this resemble?",
+ o:["String Interpolation","Tagged Templates","Spread Operator / Rest Parameters","Object Destructuring"], a:2,
+ e:"The <code>...params</code> syntax collects all arguments into an array — that's the <b>rest parameter</b> syntax (the sibling of the spread operator)."},
+
+{c:"TypeScript", q:"What is async/await?",
+ o:["New syntax to write JavaScript promises","New syntax to consume JavaScript promises","New syntax to consume asynchronous callbacks"], a:1,
+ e:"<code>async/await</code> is syntactic sugar built on top of Promises, making asynchronous code that consumes promises read like synchronous code."},
+
+{c:"TypeScript", q:"What is the name of the file that manages TypeScript projects?",
+ o:["tsproj.config","tsmeta.json","tsconfig.json","package.json"], a:2,
+ e:"<code>tsconfig.json</code> defines compiler options and which files belong to a TS project."},
+
+{c:"TypeScript", q:"How would you define a string type variable with the value 'bar' in TypeScript?",
+ o:["let string: foo = 'bar';","let foo: string = 'bar';","let string foo = 'bar';","let foo (string) = 'bar';"], a:1,
+ e:"Syntax is <code>let name: type = value;</code>."},
+
+{c:"TypeScript", q:"Which are the different data types supported by TypeScript?",
+ o:["Boolean — var bValue: boolean = false","Number — var age: number = 16",'String — var name: string = "jon"',"All of the above"], a:3, e:"TypeScript supports all standard primitive types shown."},
+
+{c:"TypeScript", q:"What are the variable scopes available in TypeScript?",
+ o:["Global Scope","Class Scope","Local Scope","All of the above"], a:3, e:"TypeScript supports global, class, and local (function/block) scope."},
+
+{c:"TypeScript", q:"Which object-oriented terms are supported by TypeScript?",
+ o:["Modules","Classes","Interfaces","All of these"], a:3, e:"TypeScript supports modules, classes, and interfaces as OOP building blocks."},
+
+{c:"TypeScript", q:"In TypeScript, code is compiled — it internally becomes JavaScript, and type validations happen at compile time.",
+ o:["True","False"], a:0,
+ e:"The TypeScript compiler (tsc) type-checks your code and then emits plain JavaScript that runs on any JS engine.",
+ fix:"Source only listed option A with no explicit answer line — option B and the confirmed answer were added."},
+
+{c:"TypeScript", q:"Which of the following arrow function forms are valid?",
+ o:["var reflect = value => value;","var sum = (num1, num2) => num1 + num2;",'var getName = () => "Nicholas";',"var sum = (num1, num2) => { return num1 + num2; };","All of the above"], a:4,
+ e:"All four are valid arrow-function syntaxes: implicit single param, implicit return, no params, and explicit block body.",
+ fix:"Source listed option E with no explicit answer line — confirmed as correct since all A–D are individually valid."},
+
+{c:"TypeScript", q:"TypeScript is a:",
+ o:["Strongly typed language","Object-oriented language","Compiled language","All the above"], a:3, e:"TypeScript is strongly typed, object-oriented, and compiles down to JavaScript."},
+
+{c:"TypeScript", q:"TypeScript is:",
+ o:["A language","A set of tools","Both a language and a set of tools","None of these"], a:2, e:"TypeScript is both a language (a typed superset of JS) and a toolchain (compiler, language service, linting integration)."},
+
+{c:"TypeScript", q:"Select user-defined / composite datatypes in TypeScript:",
+ o:["Arrays","String","Boolean","Void"], a:0, e:"Of the choices, arrays are a composite/constructed type, unlike the primitives String, Boolean, and Void."},
+
+{c:"TypeScript", q:"Which of the following are true in TypeScript?",
+ o:["We can use printf() in TypeScript","We can use console.log() in TypeScript"], a:1, e:"TypeScript (like JavaScript) has no built-in <code>printf</code>; console output uses <code>console.log()</code>."},
+
+{c:"TypeScript", q:"Which of the following are array methods?",
+ o:["unshift()","sort()","pop()","All the above"], a:3, e:"unshift, sort, and pop are all standard Array.prototype methods."},
+
+{c:"TypeScript", q:"Supertype of all datatypes in TypeScript:",
+ o:["number","Enum","void","any"], a:3, e:"<code>any</code> is the universal type that can hold a value of any other type, effectively opting out of type-checking."},
+
+{c:"TypeScript", q:"Which of the following are valid TypeScript statements?",
+ o:['var a = new String("hii");',"var b = new Array(1);",'var c: string = "hii";',"All the above"], a:3,
+ e:"All three are valid once properly quoted/capitalized — String and Array are built-in constructors, and a plain string literal can be typed as <code>string</code>.",
+ fix:"Source text had typos (unquoted 'hii', lowercase 'array') that made the listed answer (B only) look right; once corrected all three statements are valid, so the answer is D."},
+
+{c:"TypeScript", q:"List some features of TypeScript:",
+ o:["Compiles to all major versions of JavaScript (ES3, ES5, ES6, ES7)","Usable for cross-browser development and is open source","A superset of JavaScript that adds static typing","All of the above"], a:3, e:"All three statements describe real TypeScript features."},
+
+{c:"TypeScript", q:"What are the components of TypeScript?",
+ o:["TypeScript Language","TypeScript Compiler","TypeScript Language Service","All of these"], a:3, e:"TypeScript is made up of the language spec, the compiler (tsc), and the language service (used by editors for IntelliSense)."},
+
+// ---------------- CSS ----------------
+{c:"CSS", q:"Which of the following is an attribute CSS selector?",
+ o:["[selector]",".selector","#selector"], a:0, e:"Square brackets target elements by attribute, e.g. <code>[type=\"text\"]</code>."},
+
+// ---------------- REACT ----------------
+{c:"React", q:"When is it recommended to pass this.setState a function instead of an object?",
+ o:["When the new state should completely replace the old state","When the new state does not depend on the old state","When the new state depends on the old state"], a:2,
+ e:"Passing a function — <code>this.setState(prev => ...)</code> — guarantees you're updating from the latest state, avoiding race conditions from batched/async updates."},
+
+{c:"React", q:'What syntax do you use to render the App component into an HTML element with id "root"?',
+ o:['ReactDOM.render(App, document.getElementById("root"));','React.render(App, document.getElementById("root"));','ReactDOM.mountNode(<App />, document.getElementById("root"));','ReactDOM.render(<App />, document.getElementById("root"));'], a:3,
+ e:"You must pass the JSX element <code>&lt;App /&gt;</code>, not the bare component reference, into <code>ReactDOM.render</code>."},
+
+// ---------------- ANGULAR ----------------
+{c:"Angular", q:"Where should you sort and filter data in an Angular app?",
+ o:["In a directive","In a pipe","In your component","In a filter"], a:2,
+ e:"The Angular style guide recommends sorting/filtering in the component (or a service), not in a pipe — pipes re-run on every change detection cycle, which is expensive for these operations."},
+
+{c:"Angular", q:"When bootstrapping an app, how do you specify the main, top-level app component?",
+ o:["Add the component as a package in your SystemJS config","Load the component directly in your index.html file","Add the component to the bootstrap array in your main app module","Load the component directly from your main SystemJS package (e.g. main.ts)"], a:2,
+ e:"The root component is registered in the <code>bootstrap</code> array of the root NgModule (e.g. AppModule)."},
+
+{c:"Angular", q:"The three main building blocks of Angular's Router are:",
+ o:["RouteObject","RouterOutlet","RouterState","RouterLink"], a:[0,1,3],
+ e:"Commonly cited as the core routing building blocks: the route configuration object, <code>RouterOutlet</code> (renders the matched component), and <code>RouterLink</code> (navigation). <code>RouterState</code> is a supporting concept rather than one of the \"three main\" pieces.",
+ multi:true},
+
+{c:"Angular", q:"To use observables, Angular uses a third-party library called:",
+ o:["ng2-bootstrap","angular-cli","numeral","Reactive Extensions (RxJS)"], a:3, e:"Angular relies on <b>RxJS</b> for its Observable implementation and operators."},
+
+{c:"Angular", q:"Observables help you manage ______ data.",
+ o:["synchronous","asynchronous","Both synchronous & asynchronous","None of the above"], a:1, e:"Observables are primarily used to model asynchronous data streams (HTTP calls, events, etc.), though technically they can emit synchronously too — the standard course answer is asynchronous."},
+
+{c:"Angular", q:"A Promise becomes ______ after resolving or rejecting.",
+ o:["mutable","ignored","immutable","recurring"], a:2, e:"Once settled, a Promise's state and value can never change again — it's immutable."},
+
+{c:"Angular", q:"Which of the following is NOT a built-in pipe in Angular?",
+ o:["DatePipe","CurrencyPipe","DataPipe","PercentPipe"], a:2, e:"DatePipe, CurrencyPipe, and PercentPipe are real Angular pipes; DataPipe does not exist."},
+
+{c:"Angular", q:"If you chain multiple pipes together, they are executed:",
+ o:["in parallel","in LIFO order","in the order in which you specify them","none of the above"], a:2, e:"Chained pipes run left-to-right, in the exact order written in the template."},
+
+// ---------------- MONGODB ----------------
+{c:"MongoDB", q:"What theorem/principle does MongoDB follow?",
+ o:["APAC","Always-Sync","ASCII","CAP"], a:3, e:"As a distributed database, MongoDB's design trade-offs are discussed in terms of the <b>CAP theorem</b> (Consistency, Availability, Partition tolerance)."},
+
+{c:"MongoDB", q:'Upon running: db.collection.find( { qty: { $gt: 6 } }, { name: 1, _id: 0 } ) — which field(s) will be returned?',
+ o:["_id","name","_id, name","name1, _id0"], a:1, e:"The second argument is a projection: <code>name: 1</code> includes name, and <code>_id: 0</code> explicitly excludes the (normally default-included) _id field."},
+
+{c:"MongoDB", q:'In db.collection.find( { qty: { $gt: 6 } }, { name: 1, wins: 1 } ), what does the second parameter represent?',
+ o:["Read Concern","Projection","Write Concern","Query"], a:1, e:"The second argument to <code>find()</code> is the <b>projection</b> — it controls which fields are returned."},
+
+// ---------------- NODE ----------------
+{c:"Node.js", q:"EventEmitter's simple interface basically encompasses two methods, which can be used to trigger custom events and listen to events, both synchronously or asynchronously:",
+ o:["exit()","superscript()","subscribe()","emit() (paired with .on())"], a:3,
+ e:"Node's <code>EventEmitter</code> exposes <code>.on()</code> to listen for events and <code>.emit()</code> to trigger them. <code>subscribe()</code> is not a Node EventEmitter method (that's an RxJS/Observable concept).",
+ fix:"The source answer 'subscribe()' is factually incorrect for Node's EventEmitter API — corrected to emit()."},
+
+// ---------------- JAVA / JSP / SERVLETS ----------------
+{c:"Java", q:"ArithmeticException and IOException are examples of which kind of exception?",
+ o:["Both checked exceptions","Both unchecked (runtime) exceptions","One is unchecked (ArithmeticException), one is checked (IOException)","Both are Errors, not Exceptions"], a:2,
+ e:"ArithmeticException extends RuntimeException (unchecked). IOException extends Exception directly and must be declared/caught (checked).",
+ fix:"Source answer 'runtime error' only holds for ArithmeticException — IOException is a checked exception, not a runtime one."},
+
+{c:"Java", q:"What is the typical sequence of steps in Java servlet deployment?",
+ o:["Coding, Compiling, Deploying","Deploying, Coding, Compiling","Compiling, Deploying, Coding","Coding, Deploying, Compiling"], a:0, e:"You write the servlet code, compile it into bytecode, then deploy it (e.g. as part of a WAR) to the servlet container."},
+
+{c:"Java", q:"Which JDBC object is used to submit a query?",
+ o:["Connection","Statement","ResultSet","DriverManager"], a:1, e:"A <code>Statement</code> (or its subtypes PreparedStatement/CallableStatement) is used to execute SQL queries against a Connection."},
+
+{c:"Java", q:"Which statement about abstract classes/methods is FALSE?",
+ o:["An abstract class can be instantiated directly","An abstract class doesn't need to declare any abstract methods","A class containing an abstract method must itself be declared abstract","An abstract method has no body"], a:0,
+ e:"Abstract classes can never be instantiated directly with <code>new</code> — that's precisely what makes them abstract."},
+
+{c:"Java", q:"Which of the following IS a JSP implicit object?",
+ o:["this","page","applet","module"], a:1, e:"JSP's 9 implicit objects are: request, response, pageContext, session, application, out, config, page, exception. 'this' is not one of them — 'page' fills that role.",
+ fix:"Source listed 'page, this' as the answer; 'this' isn't actually a JSP implicit object name."},
+
+{c:"Java", q:"Which range represents successful (2xx) HTTP status codes?",
+ o:["100–199","200–299","300–399","400–499"], a:1, e:"2xx codes (200 OK, 201 Created, etc.) indicate success."},
+
+{c:"Java", q:"The superclass of all classes in Java is:",
+ o:["Object","Class","Void","Super"], a:0, e:"Every class implicitly extends <code>java.lang.Object</code> if no other superclass is specified."},
+
+{c:"Java", q:"Which method is used to mark a thread as a background (daemon) thread?",
+ o:["setPriority()","setDaemon(true)","start()","run()"], a:1, e:"<code>Thread.setDaemon(true)</code> marks a thread as a daemon thread before it's started."},
+
+{c:"Java", q:"JDBC classes and interfaces belong to which package?",
+ o:["java.util.*","java.sql.*","java.io.*","java.net.*"], a:1, e:"Core JDBC API lives in <code>java.sql</code> (and <code>javax.sql</code> for extensions)."},
+
+{c:"Java", q:"Which of the following is NOT a primitive datatype in Java?",
+ o:["int","char","boolean","String"], a:3, e:"String is a reference type (a class), not one of Java's 8 primitives."},
+
+{c:"Java", q:"System.out.println() belongs to which class?",
+ o:["PrintWriter","PrintStream","BufferedWriter","System"], a:1, e:"<code>System.out</code> is a <code>PrintStream</code> instance."},
+
+{c:"Java", q:"A void method does not return a value.",
+ o:["True","False"], a:0, e:"By definition, <code>void</code> means the method returns nothing."},
+
+{c:"Java", q:"Which method reverses the characters of a string?",
+ o:["reverse()","flip()","invert()","swap()"], a:0, e:"<code>StringBuilder</code>/<code>StringBuffer</code> provide a <code>reverse()</code> method (String itself is immutable and has no reverse method)."},
+
+{c:"Java", q:"The JSP implicit object 'session' is of which type?",
+ o:["HttpSession","HttpServletRequest","HttpServletResponse","ServletContext"], a:0,
+ e:"The implicit <code>session</code> variable is of type <code>HttpSession</code> — it's obtained internally via <code>request.getSession()</code>, but its own type is HttpSession, not HttpServletRequest.",
+ fix:"Source answer said HttpServletRequest — corrected to HttpSession."},
+
+{c:"Java", q:"In AWT, what are the default layouts for Frame and Panel respectively?",
+ o:["Frame: BorderLayout, Panel: FlowLayout","Frame: FlowLayout, Panel: BorderLayout","Both use BorderLayout","Both use FlowLayout"], a:0, e:"java.awt.Frame defaults to BorderLayout; java.awt.Panel defaults to FlowLayout."},
+
+{c:"Java", q:"Which interface is primarily used to represent a connection to a database in JDBC?",
+ o:["Connection","Statement","ResultSet","Driver"], a:0, e:"<code>java.sql.Connection</code> represents the established session with a database."},
+
+{c:"Java", q:"What does File.list() return?",
+ o:["An array of File objects","An array of String filenames","A List<String>","An ArrayList"], a:1, e:"<code>File.list()</code> returns a <code>String[]</code> of filenames; <code>listFiles()</code> is the one returning File objects."},
+
+{c:"Java", q:"Which of the following is a valid method declaration?",
+ o:["public void int A()","public int test2(int o);","public void test int(int i, int j);","None of the above"], a:1, e:"A valid declaration needs a single return type followed by a method name and parameter list — option B is correctly formed (as an interface/abstract method signature)."},
+
+{c:"Java", q:'public class B { static int x; public static void main(String[] a){ System.out.println(B.x); } }\nWhat is printed?',
+ o:["prints 0","Compile error","prints null","Runtime exception"], a:0, e:"An uninitialized static int defaults to 0, and static fields are accessible via ClassName.field."},
+
+{c:"Java", q:"Which of the following is NOT a JSP directive?",
+ o:["page","include","taglib","forward"], a:3, e:"JSP directives are page, include, and taglib. 'forward' is a JSP action (<jsp:forward>), not a directive."},
+
+{c:"Java", q:"Scriptlet, expression, and directive are all examples of:",
+ o:["JSP scripting elements","JSP actions","JSP implicit objects","JSP beans"], a:0, e:"Scriptlets (<% %>), expressions (<%= %>), and directives (<%@ %>) are all JSP scripting/syntax elements."},
+
+{c:"Java", q:'<jsp:useBean id="name" class="java.lang.String"/>\n<%= name %>\nWhat is the output?',
+ o:["prints 0","prints null","compile time error","none of the above — prints an empty string"], a:3,
+ e:"java.lang.String has a public no-argument constructor, so useBean successfully instantiates it as \"\" (empty string) — not null and not 0.",
+ fix:"None of the source's literal options ('prints 0'/'prints null') are correct — 'none of the above' is the accurate choice."},
+
+{c:"Java", q:"Which call correctly invokes a base (super) class constructor that takes an int argument?",
+ o:["this(10)","super(10)","super()","new Base(10)"], a:1, e:"<code>super(10)</code> explicitly calls the superclass constructor with the given argument."},
+
+{c:"Java", q:"How can a session object be explicitly destroyed in a servlet/JSP?",
+ o:["session.invalidate()","session.remove()","session.destroy()","session.close()"], a:0, e:"<code>HttpSession.invalidate()</code> ends the session and unbinds any objects from it."},
+
+{c:"Java", q:"What are the default values of uninitialized static int, double, char, long, and short fields respectively?",
+ o:["0, 0.0, '\\u0000', 0L, 0","null for all","Garbage/unpredictable values","Compile error — must be initialized"], a:0, e:"Static (and instance) numeric fields default to 0/0.0, char defaults to the null character, all without needing explicit initialization."},
+
+{c:"Java", q:'<%! int i = 8; %>\n<% int i = 10; %>\n<%= i %>\nWhat is printed?',
+ o:["prints 8","prints 10","compile time error","prints 18"], a:1, e:"The scriptlet's local variable <code>i</code> legally shadows the instance field declared with <%! %>, so <%= i %> resolves to the local value, 10."},
+
+{c:"Java", q:"Class.forName() throws which checked exception if the class isn't found?",
+ o:["ClassNotFoundException","IOException","SQLException","RuntimeException"], a:0, e:"<code>Class.forName(String)</code> declares <code>throws ClassNotFoundException</code>."},
+
+{c:"Java", q:"Which RandomAccessFile method is used to specify a new file-pointer position?",
+ o:["seek()","skip()","mark()","reset()"], a:0, e:"<code>seek(long pos)</code> moves the file pointer to the given byte offset."},
+
+{c:"Java", q:"Which of the following is NOT a valid char declaration in Java?",
+ o:["char c = 'A';","char c = 65;",'char c = "A";',"char c = '\\u0041';"], a:2, e:"A char literal must use single quotes or be an int/unicode escape — a double-quoted value is a String, which can't be assigned to char."},
+
+{c:"Java", q:'static int i = 012;\npublic static void main(String[] args){ System.out.println(i); }\nWhat is printed?',
+ o:["prints 12","prints 10","Compile error","prints 012"], a:1, e:"A leading zero makes 012 an <b>octal</b> literal: 1×8 + 2 = 10."},
+
+{c:"Java", q:"Which array declaration is INVALID in Java?",
+ o:["int[] i = new int[5];","int[] i = new int[]{1,2,3};","int[] i = new int[];","int[][] i = new int[2][3];"], a:2, e:"new int[] with no size and no initializer list is a compile error — you need either a size or an initializer."},
+
+{c:"Java", q:"boolean a, b, c;  // all default to false\nboolean result = a || (b = true) && (c = true);\nSystem.out.println(a + \",\" + b + \",\" + c);\nWhat is printed?",
+ o:["false,false,false","false,true,true","true,true,true","Compile error"], a:1, e:"&& binds tighter than ||, so it's a || ((b=true) && (c=true)); since a is false, the right side is evaluated: b and c both get assigned true, while a itself stays false."},
+
+{c:"Java", q:"InputStreamReader isr = new InputStreamReader(System.in);\nBufferedReader br = new BufferedReader(isr);\nWhat is br used for?",
+ o:["Reading raw binary data","Efficiently reading buffered character/text input from the console","Writing to a file","Converting bytes into serialized objects"], a:1, e:"Wrapping an InputStreamReader in a BufferedReader gives efficient, line-based text reading (e.g. via readLine())."},
+
+{c:"Java", q:"Which method is used to create a copy of an existing object?",
+ o:["copy()","duplicate()","clone()","new()"], a:2, e:"<code>Object.clone()</code> (when supported via the Cloneable interface) creates a copy of an object."},
+
+{c:"Java", q:"Every Servlet must implement which interface (directly or via GenericServlet/HttpServlet)?",
+ o:["The Servlet interface","The ServletConfig interface","Both Servlet and ServletContext","Only ServletContext"], a:0,
+ e:"Every servlet must implement <code>javax.servlet.Servlet</code>. ServletConfig is provided to it, not implemented by it.",
+ fix:"Source's 'servlet context / web context' framing doesn't match real Servlet API interfaces — corrected."},
+
+{c:"Java", q:"Submitting a SQL query in JDBC is done using a:",
+ o:["Connection object","Statement object","ResultSet object","DriverManager object"], a:1, e:"A Statement (or PreparedStatement) object executes the query."},
+
+{c:"Java", q:"Given double x = 4.8, which Math method returns 4 (rounds down / truncates the fractional part)?",
+ o:["Math.ceil(x)","Math.floor(x)","Math.round(x)","Math.abs(x)"], a:1, e:"<code>Math.floor(4.8)</code> = 4.0 (rounds toward negative infinity); ceil would give 5."},
+
+{c:"Java", q:"Which of these is a core feature of Java?",
+ o:["Object-Oriented Programming","Platform-dependent execution","Manual memory management","Unsafe raw pointers"], a:0, e:"Java is fundamentally object-oriented, platform-independent (via the JVM), and garbage-collected — no raw pointers."},
+
+{c:"Java", q:"How does an applet primarily communicate with its browser environment?",
+ o:["Through the AppletContext interface (e.g. getAppletContext(), showDocument())","Via a direct raw socket connection","Through the Servlet API","Through JDBC"], a:0, e:"AppletContext exposes methods letting an applet interact with the browser, such as opening a document or finding other applets on the page."},
+
+// ---------------- ANGULARJS ----------------
+{c:"AngularJS", q:"Scope acts as glue between controller and view.", o:["True","False"], a:0, e:"$scope is the object that links the controller's logic to the view's bindings."},
+{c:"AngularJS", q:"We can use $dirty and $invalid flags to do form validations.", o:["True","False"], a:0, e:"AngularJS form/input controllers expose $dirty, $invalid, $pristine, $valid etc. for validation state."},
+{c:"AngularJS", q:"AngularJS expressions behave in the same way as ng-bind directives.", o:["False","True"], a:1, e:"{{ expression }} and ng-bind achieve the same one-way binding of a value into the DOM."},
+{c:"AngularJS", q:"AngularJS expressions are written inside double braces like {{ expression }}.", o:["False","True"], a:1, e:"That's AngularJS's interpolation syntax."},
+{c:"AngularJS", q:"Which of the following is true about AngularJS expressions?",
+ o:["They're used to bind application data to HTML","They're written inside double braces like {{ expression }}","They behave the same way as ng-bind directives","All of the above"], a:3, e:"All three statements about expressions are correct."},
+{c:"AngularJS", q:"A model available on $rootScope can be overridden by all of its child scopes.", o:["True","False"], a:0, e:"Child scopes prototypically inherit from $rootScope and can shadow/override inherited properties."},
+{c:"AngularJS", q:"Which of the following is true about AngularJS?",
+ o:["It's a framework for building large-scale, high-performance, easy-to-maintain web apps","It lets developers write client-side apps in a clean MVC way","It's a powerful JS framework for building Rich Internet Applications (RIA)","All of the above"], a:3, e:"All three describe AngularJS accurately."},
+{c:"AngularJS", q:"Are applications written using AngularJS cross-browser compliant?", o:["True","False"], a:0, e:"AngularJS handles browser differences internally, so apps work consistently across major browsers."},
+{c:"AngularJS", q:"Using the .service() method, we define a service and then assign methods to it.", o:["True","False"], a:0, e:"service() registers a constructor function; you attach methods to 'this' inside it."},
+{c:"AngularJS", q:"AngularJS uses two-way data binding.", o:["False","True"], a:1,
+ e:"AngularJS's hallmark feature is automatic two-way binding between the model ($scope) and the view.",
+ fix:"The source left this question without an explicit answer line — added based on well-established AngularJS behavior."},
+{c:"AngularJS", q:"Templates can be a single file (like index.html) or multiple views combined into one page.", o:["True","False"], a:0, e:"Using ng-include or routing 'partials', templates can be split across multiple files."},
+{c:"AngularJS", q:"Which of the following is true about AngularJS services?",
+ o:["Services are JavaScript functions/objects","Services are responsible for specific tasks only","Built-in services are always prefixed with $","All of the above"], a:3, e:"All three describe how AngularJS services work (e.g. $http, $route)."},
+{c:"AngularJS", q:"$rootScope is the parent of all scope variables.", o:["True","False"], a:0, e:"Every scope in an AngularJS app ultimately inherits from $rootScope."},
+{c:"AngularJS", q:"What happens when a page containing an AngularJS app loads?",
+ o:["The HTML document is loaded and evaluated by the browser","The AngularJS script loads and the angular global object is created","JavaScript registering controller functions is executed","All of the above, in that order"], a:3, e:"That's the correct load sequence for an AngularJS bootstrap."},
+{c:"AngularJS", q:"In controllers, model data is accessed via the $scope object.", o:["True","False"], a:0, e:"$scope is injected into controllers and is how they read/write model data."},
+{c:"AngularJS", q:"AngularJS expressions are used to bind application data to HTML.", o:["True","False"], a:0, e:"That's their core purpose."},
+{c:"AngularJS", q:"AngularJS expressions are written using:",
+ o:["Double braces like {{ expression }}","Single braces like {expression}","Small brackets like (expression)","Square brackets like [expression]"], a:0, e:"Interpolation syntax in AngularJS is double curly braces."},
+{c:"AngularJS", q:"A lowercase filter is applied to an expression using the pipe character.", o:["False","True"], a:1, e:"e.g. {{ name | lowercase }} — the pipe character chains a filter onto an expression."},
+{c:"AngularJS", q:"AngularJS applications can run on all major browsers and smartphones, including Android and iOS.", o:["True","False"], a:0, e:"AngularJS is designed to be cross-platform and cross-browser."},
+{c:"AngularJS", q:"A currency filter is applied to an expression using the pipe character.", o:["True","False"], a:0, e:"e.g. {{ price | currency }}."},
+];
+
+// ---------- render ----------
+const quizEl = document.getElementById('quiz');
+const filtersEl = document.getElementById('filters');
+const categories = ["All", ...new Set(DATA.map(d=>d.c))];
+const catColor = {
+  "TypeScript":"var(--ts)","MongoDB":"var(--mongo)","Java":"var(--java)",
+  "Angular":"var(--angular)","AngularJS":"var(--angularjs)","React":"var(--react)",
+  "CSS":"var(--css)","Node.js":"var(--node)"
+};
+let activeFilter = "All";
+let state = {}; // index -> chosen option index
+
+function letter(i){return String.fromCharCode(65+i);}
+
+function renderFilters(){
+  filtersEl.innerHTML = "";
+  categories.forEach(cat=>{
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (cat===activeFilter ? ' active' : '');
+    btn.textContent = cat + (cat==="All" ? ` (${DATA.length})` : ` (${DATA.filter(d=>d.c===cat).length})`);
+    btn.onclick = ()=>{ activeFilter = cat; renderFilters(); renderQuiz(); };
+    filtersEl.appendChild(btn);
+  });
+}
+
+function renderQuiz(){
+  quizEl.innerHTML = "";
+  DATA.forEach((item, idx)=>{
+    if(activeFilter!=="All" && item.c!==activeFilter) return;
+    const card = document.createElement('div');
+    card.className = 'qcard' + (state[idx]!==undefined ? ' answered' : '');
+
+    const meta = document.createElement('div');
+    meta.className = 'qmeta';
+    const badge = document.createElement('span');
+    badge.className='badge';
+    badge.style.background = catColor[item.c] || 'var(--accent)';
+    badge.textContent = item.c;
+    meta.appendChild(badge);
+    const num = document.createElement('span');
+    num.className='qnum';
+    num.textContent = 'Q' + (idx+1);
+    meta.appendChild(num);
+    if(item.multi){
+      const mtag = document.createElement('span');
+      mtag.className='multi-tag';
+      mtag.textContent='multi-select';
+      meta.appendChild(mtag);
+    }
+    if(item.fix){
+      const tag = document.createElement('span');
+      tag.className = 'fixed-tag';
+      tag.textContent = 'answer corrected / options added';
+      meta.appendChild(tag);
+    }
+    card.appendChild(meta);
+
+    const qt = document.createElement('p');
+    qt.className='qtext';
+    qt.textContent = item.q;
+    card.appendChild(qt);
+
+    const optsWrap = document.createElement('div');
+    optsWrap.className='options';
+
+    const correctSet = Array.isArray(item.a) ? item.a : [item.a];
+
+    item.o.forEach((optText, oi)=>{
+      const opt = document.createElement('div');
+      opt.className='opt';
+      opt.innerHTML = `<span class="letter">${letter(oi)}</span><span>${optText}</span><span class="mark"></span>`;
+      opt.onclick = ()=>{
+        if(state[idx]!==undefined) return;
+        state[idx] = oi;
+        renderQuiz();
+        updateScore();
+      };
+      if(state[idx]!==undefined){
+        opt.classList.add('disabled');
+        const isCorrect = correctSet.includes(oi);
+        if(isCorrect){
+          opt.classList.add('correct');
+          opt.querySelector('.mark').textContent = '✓ correct';
+        }
+        if(oi===state[idx] && !isCorrect){
+          opt.classList.add('wrong');
+          opt.querySelector('.mark').textContent = '✗ your answer';
+        }
+      }
+      optsWrap.appendChild(opt);
+    });
+    card.appendChild(optsWrap);
+
+    const exp = document.createElement('div');
+    exp.className = 'explain' + (state[idx]!==undefined ? ' show' : '');
+    exp.innerHTML = `<b>Explanation:</b> ${item.e}` + (item.fix ? `<span class="fixnote">⚠ ${item.fix}</span>` : '');
+    card.appendChild(exp);
+
+    quizEl.appendChild(card);
+  });
+}
+
+function updateScore(){
+  const answered = Object.keys(state).length;
+  let correct = 0;
+  Object.entries(state).forEach(([idx, chosen])=>{
+    const item = DATA[idx];
+    const correctSet = Array.isArray(item.a) ? item.a : [item.a];
+    if(correctSet.includes(chosen)) correct++;
+  });
+  document.getElementById('answeredCount').textContent = answered;
+  document.getElementById('correctCount').textContent = correct;
+  document.getElementById('totalCount').textContent = DATA.length;
+}
+
+document.getElementById('resetBtn').onclick = ()=>{
+  state = {};
+  renderQuiz();
+  updateScore();
+};
+
+renderFilters();
+renderQuiz();
+updateScore();
+</script>
+</body>
+</html>
