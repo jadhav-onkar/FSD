@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java / Spring / AOP / REST / DevOps / Docker / Kubernetes — Practice Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d1117;
+    --panel:#151b23;
+    --panel-2:#1c2430;
+    --line:#2a3341;
+    --text:#dbe4ee;
+    --muted:#8593a6;
+    --docker-blue:#2596e8;
+    --spring-green:#6fbf3f;
+    --amber:#e8b339;
+    --red:#e8556b;
+    --mono:'JetBrains Mono', monospace;
+    --sans:'Inter', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(900px 500px at 100% -10%, rgba(37,150,232,.10), transparent 60%),
+      radial-gradient(900px 500px at -10% 0%, rgba(111,191,63,.08), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.5;
+    min-height:100vh;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:36px 20px 90px;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    border:1px solid var(--line);
+    background:linear-gradient(180deg, var(--panel), var(--panel-2));
+    border-radius:16px;
+    padding:28px 26px;
+    margin-bottom:26px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 40px);
+    pointer-events:none;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--docker-blue);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:10px;
+  }
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--spring-green);box-shadow:0 0 0 3px rgba(111,191,63,.15);}
+  h1{
+    font-size:clamp(22px,4vw,30px);
+    margin:0 0 8px;
+    font-weight:800;
+    letter-spacing:-0.01em;
+  }
+  .hero p{color:var(--muted);margin:0;font-size:14.5px;max-width:60ch;}
+
+  .stats{
+    display:flex; gap:10px; flex-wrap:wrap; margin-top:20px;
+  }
+  .stat{
+    font-family:var(--mono);
+    background:rgba(255,255,255,.03);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 14px;
+    min-width:96px;
+  }
+  .stat .n{font-size:20px;font-weight:700;}
+  .stat .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:2px;}
+  .stat.score .n{color:var(--spring-green);}
+
+  /* ---------- CONTROLS ---------- */
+  .controls{
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    position:sticky; top:0; z-index:50;
+    background:rgba(13,17,23,.88);
+    backdrop-filter:blur(10px);
+    padding:12px 0;
+    margin-bottom:6px;
+    border-bottom:1px solid var(--line);
+  }
+  button{
+    font-family:var(--sans);
+    font-weight:600;
+    font-size:13.5px;
+    cursor:pointer;
+    border-radius:9px;
+    border:1px solid var(--line);
+    padding:10px 16px;
+    background:var(--panel-2);
+    color:var(--text);
+    transition:.15s ease;
+  }
+  button:hover{border-color:var(--docker-blue); background:#1e2836;}
+  .btn-primary{
+    background:linear-gradient(180deg, var(--docker-blue), #1c7bc2);
+    border-color:transparent;
+    color:#fff;
+  }
+  .btn-primary:hover{filter:brightness(1.08);}
+  .btn-ghost{background:transparent;}
+
+  /* ---------- SECTION NAV ---------- */
+  .section-nav{
+    display:flex; gap:8px; flex-wrap:wrap; margin:18px 0 26px;
+  }
+  .chip{
+    font-family:var(--mono);
+    font-size:11.5px;
+    padding:7px 12px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    color:var(--muted);
+    cursor:pointer;
+    background:var(--panel);
+    white-space:nowrap;
+  }
+  .chip.active{color:#fff;border-color:var(--docker-blue);background:rgba(37,150,232,.15);}
+
+  /* ---------- SECTIONS ---------- */
+  .section{margin-bottom:34px;}
+  .section-head{
+    display:flex; align-items:baseline; gap:12px;
+    margin-bottom:14px;
+    padding-bottom:10px;
+    border-bottom:2px solid var(--line);
+  }
+  .section-head h2{
+    font-size:16.5px; margin:0; font-weight:700;
+  }
+  .section-head .tag{
+    font-family:var(--mono); font-size:11px; color:var(--muted);
+    background:var(--panel-2); border:1px solid var(--line);
+    padding:3px 9px; border-radius:6px;
+  }
+
+  /* ---------- QUESTION CARD ---------- */
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:18px 18px 16px;
+    margin-bottom:12px;
+    transition:border-color .15s;
+  }
+  .card.correct{border-color:var(--spring-green);}
+  .card.incorrect{border-color:var(--red);}
+  .qhead{display:flex; gap:10px; margin-bottom:12px;}
+  .qnum{
+    font-family:var(--mono); font-size:12px; color:var(--docker-blue);
+    background:rgba(37,150,232,.12); border-radius:6px;
+    padding:2px 7px; height:fit-content; flex-shrink:0; margin-top:2px;
+  }
+  .qtext{font-size:15px; font-weight:600; flex:1;}
+  .qtext code, pre{
+    font-family:var(--mono); font-size:12.8px; background:#0a0e14;
+    border:1px solid var(--line); border-radius:6px;
+  }
+  pre{padding:10px 12px; overflow-x:auto; margin:8px 0 0; white-space:pre; color:#b9c6d6;}
+  code{padding:1px 5px;}
+
+  .options{display:flex; flex-direction:column; gap:7px; margin-left:38px;}
+  .opt{
+    display:flex; align-items:center; gap:10px;
+    padding:9px 12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    cursor:pointer;
+    font-size:13.8px;
+    background:var(--panel-2);
+  }
+  .opt:hover{border-color:var(--docker-blue);}
+  .opt input{accent-color:var(--docker-blue); width:15px; height:15px; flex-shrink:0;}
+  .opt.marked-correct{border-color:var(--spring-green); background:rgba(111,191,63,.10); color:#c9f0b0;}
+  .opt.marked-wrong{border-color:var(--red); background:rgba(232,85,107,.10); color:#f5b9c2;}
+  .opt .lab{font-family:var(--mono); color:var(--muted); font-weight:700; font-size:12px;}
+  .opt .icon{margin-left:auto; font-size:13px;}
+
+  .feedback{
+    margin-left:38px; margin-top:10px;
+    font-size:12.8px; font-family:var(--mono);
+    padding:8px 10px; border-radius:7px;
+    display:none;
+  }
+  .feedback.show{display:block;}
+  .feedback.ok{background:rgba(111,191,63,.10); color:#a9e08c;}
+  .feedback.no{background:rgba(232,85,107,.10); color:#f0a2ae;}
+
+  /* ---------- FLASHCARD ---------- */
+  .flash{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:16px 18px;
+    margin-bottom:12px;
+  }
+  .flash .qtext{margin-bottom:0;}
+  .flash-toggle{
+    margin-top:10px; margin-left:38px;
+    font-size:12.5px; font-family:var(--mono);
+    color:var(--docker-blue); cursor:pointer;
+    display:inline-flex; align-items:center; gap:6px;
+    user-select:none;
+  }
+  .flash-answer{
+    display:none; margin-left:38px; margin-top:8px;
+    font-size:13.5px; padding:9px 12px;
+    background:rgba(111,191,63,.08);
+    border:1px solid rgba(111,191,63,.35);
+    border-radius:8px; color:#c9f0b0;
+  }
+  .flash-answer.show{display:block;}
+
+  footer{
+    text-align:center; color:var(--muted); font-size:12px;
+    margin-top:50px; font-family:var(--mono);
+  }
+
+  @media (max-width:600px){
+    .options, .feedback, .flash-toggle, .flash-answer{margin-left:0;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow"><span class="dot"></span>PRACTICE SET · SPRING · AOP · REST · DEVOPS · DOCKER · KUBERNETES</div>
+    <h1>Java Core → Spring → Containers</h1>
+    <p>Every question from your uploaded set, rebuilt as a self-checking quiz. Pick an answer and hit <strong>Check</strong> — correct options light up green, your miss lights up red. Reference-style items without clean options are flashcards you can flip.</p>
+    <div class="stats">
+      <div class="stat"><div class="n" id="statTotal">0</div><div class="l">MCQ Questions</div></div>
+      <div class="stat"><div class="n" id="statAnswered">0</div><div class="l">Answered</div></div>
+      <div class="stat score"><div class="n" id="statScore">0</div><div class="l">Correct</div></div>
+      <div class="stat"><div class="n" id="statFlash">0</div><div class="l">Flashcards</div></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn-primary" onclick="checkAll()">✓ Check all answers</button>
+    <button class="btn-ghost" onclick="revealAll()">👁 Reveal all correct answers</button>
+    <button class="btn-ghost" onclick="resetAll()">↺ Reset</button>
+  </div>
+
+  <div class="section-nav" id="sectionNav"></div>
+
+  <div id="quizRoot"></div>
+
+  <footer>Built from your uploaded PDF · study set for personal review</footer>
+</div>
+
+<script>
+/* =========================================================
+   DATA
+   type: "mcq"  -> {q, code(optional), options:[...], correct: index}
+   type: "flash"-> {q, code(optional), a}
+   ========================================================= */
+const DATA = [
+
+{ id:"spring-core", title:"Spring Core & Web Services", items:[
+{type:"mcq", q:"Spring-WS provides various abstract endpoint classes for you to process the request. Which package?", options:["org.springframework.ws.server.endpoint","org.springframework.ws.server","org.springframework.*","None of the mentioned"], correct:0},
+{type:"mcq", q:"Which method is used to gracefully shutdown all the bean processes after closing the Spring container?", options:["shutdownHook","destroy method","None of the mentioned","All of the mentioned"], correct:0},
+{type:"mcq", q:"Which one is the default scope of the beans?", options:["Prototype","Session","Request","Singleton"], correct:3},
+{type:"mcq", q:"Declaring bean form object properties can be done using:", options:["PropertyPathFactoryBean","util:constant","None of the mentioned","All of the mentioned"], correct:0},
+{type:"mcq", q:"What are the ways to create custom Property Editors?", options:["Implement the PropertyEditor interface only","Extend PropertyEditorSupport class only","None of the mentioned","Both: implement PropertyEditor interface and extend PropertyEditorSupport class"], correct:3},
+{type:"mcq", q:"Spring Web MVC follows the 'Open for extension, closed for modification' principle — a number of core classes have methods marked final. True or false?", options:["True","False"], correct:0},
+{type:"mcq", q:"Which of the following is NOT a special bean in WebApplicationContext?", options:["Locale resolver","Theme resolver","Handler exception resolver","None of the above — all listed are special beans"], correct:3},
+{type:"mcq", q:"How does the Spring DispatcherServlet support returning the last-modification-date, as specified by the Servlet API?", options:["By implementing the LastModified interface","By implementing the LastSessionModified interface","By implementing the LastDateModified interface","By implementing the LastModifiedDate interface"], correct:0},
+{type:"mcq", q:"@RequestMapping annotation is used to map an HTTP request method (GET or POST) to a specific class or method in the controller. True or false?", options:["False","True"], correct:1},
+{type:"mcq", q:"Which exception class is related to all the exceptions thrown in Spring applications?", options:["DataAccessException","ArrayIndexOutOfBoundsException","NullPointerException","SpringException"], correct:0},
+{type:"mcq", q:"Which of the following is true for Controllers in Spring?", options:["An abstract class","An interface","A concrete class","A final class"], correct:1},
+{type:"mcq", q:"Annotations work as metadata for classes, and Spring uses annotations as an alternative to XML for declarative configuration. True or false?", options:["False","True"], correct:1},
+{type:"mcq", q:"Which of the following specify the points where weaving can be applied?", options:["Compile Time, Classload Time, load time","Compile Time, Classload Time, Runtime","Compile Time and Runtime","Compile Time and Classload Time"], correct:1},
+{type:"mcq", q:"Which layer is the @Controller annotation used in?", options:["Business layer","Service layer","Presentation layer","Session layer"], correct:2},
+{type:"mcq", q:"Which of the following is NOT a valid difference between @Inject and @Autowired annotations?", options:["@Inject is part of Java EE 7's CDI framework while @Autowired is Spring's own implementation","@Autowired is a legacy annotation whereas @Inject is its latest version","There is no functional difference and both are used similarly for field/setter/constructor injection","None of these"], correct:1},
+{type:"mcq", q:"Which of the following correctly lists the Autowire types?", options:["byName, byMethod, constructor and autodetect","byName, byType, destructor and autodetect","byName, byType, constructor and autodetect","byName, byType, constructor and autocorrect"], correct:2},
+{type:"mcq", q:"Which of the following statements is true?", options:["BeanFactory extends ApplicationContext","ApplicationContext extends BeanFactory","ApplicationContext implements BeanFactory","BeanFactory implements ApplicationContext"], correct:1},
+{type:"mcq", q:"Which advice types are supported by the @Aspect annotation?", options:["@Before only","@After only","@AfterReturning only","All of the mentioned (@Before, @After, @AfterReturning, etc.)"], correct:3},
+{type:"mcq", q:"Which advice is executed only when the join point returns or throws an exception?", options:["@Before","@After","@AfterReturning","@AfterThrowing"], correct:2},
+{type:"mcq", q:"What is the special compiler used during weaving (in AspectJ)?", options:["jvm","gcc","ajc","None of the mentioned"], correct:2},
+{type:"mcq", q:"How do you inject a Spring bean into domain objects?", options:["AOP","XML","AspectJ","Java-Based configuration"], correct:2},
+{type:"mcq", q:"Which method is used to process a bean before its initialization callback?", options:["scope","postProcessAfterInitialization()","postProcessBeforeInitialization()","its own constructor"], correct:2},
+{type:"mcq", q:"Which attribute is used to set the scope of a bean?", options:["setScope","scope","getScope","None of the mentioned"], correct:1},
+{type:"mcq", q:"Which attribute is used to specify the class name of a bean?", options:["name","id","class","constructor-args"], correct:2},
+{type:"mcq", q:"Which tag is also allowed for a static field?", options:["util:constant","list","set","constructor-args"], correct:0},
+{type:"mcq", q:"Which class has full access to the Spring context's lifecycle machinery and dependency injection?", options:["DelegatingFilterProxy","WebApplicationContextUtils.getRequiredWeb()","WebApplicationUtils.getRequiredWebApplicationContext()","None of the mentioned"], correct:0},
+{type:"mcq", q:"Which element is used to specify access attributes for a bean's methods (Spring Security)?", options:["security:protect","security:intercept","security:intercept-security","None of the mentioned"], correct:0},
+{type:"mcq", q:"Which of the following relate to Spring Web Flows?", options:["view","action","decision","All of the mentioned"], correct:3},
+{type:"mcq", q:"Which class enables Spring Security for web flows?", options:["SecurityFlowExecutionListener","SecurityFlowExecution","FlowSecurity","SecurityFlowListener"], correct:0}
+]},
+
+{ id:"spring-tx-rest", title:"Transactions, Validation & MVC Rendering", items:[
+{type:"mcq", q:"Does Spring provide programmatic transaction management?", options:["Yes, using the @Transactional bean post-processor","Yes, with the TransactionTemplate class","Yes, with the TransactionService class","No, Spring only supports declarative transactions"], correct:1},
+{type:"mcq", q:"How could you externalize constants from a Spring configuration file or annotation into a .properties file?", options:["By using the <context:property-placeholder /> tag","By using the <util:constant /> tag","By declaring a ConstantPlaceholderConfigurer bean post-processor","By using the c: namespace"], correct:0},
+{type:"mcq", q:"How do you validate Java beans in a web application using annotations?", options:["XML only","Java-Based only","JSR-303 standard only","All of the mentioned"], correct:3},
+{type:"mcq", q:"Which annotation indicates a field must have a minimum of 2 characters?", options:["@NotNull","@Size","@MaxSize","@size"], correct:1},
+{type:"mcq", q:"Spring MVC supports generating Excel files using which library?", options:["Apache POI library","JExcelAPI library","All of the mentioned","None of the mentioned"], correct:2},
+{type:"mcq", q:"Which interface allows the DispatcherServlet to auto-detect view resolver beans?", options:["localeResolver","tiles","ViewResolver","None of the mentioned"], correct:2},
+{type:"mcq", q:"By default, XmlViewResolver loads view beans from /WEB-INF/views.xml, which is final. True or false?", options:["True","False"], correct:1},
+{type:"mcq", q:"Which type of view can't be resolved by InternalResourceViewResolver?", options:["redirect: views","redirect:prefix","redirect:suffix","All of the mentioned"], correct:0}
+]},
+
+{ id:"spring-rest-aop", title:"REST, SpEL & AOP (Set 2)", items:[
+{type:"mcq", q:"Which annotation allows a controller's field to be assigned using Spring Expression Language (SpEL)?", options:["@Value","@After","@Default","@None"], correct:0},
+{type:"mcq", q:"SpEL statements are recognizable. True or false?", options:["True","False"], correct:0},
+{type:"mcq", q:"To publish a REST service with Spring, you can:", options:["Publish an application's data as a REST service only","Access data from third-party REST services only","None of the mentioned","Both: publish your own data AND access third-party REST services"], correct:3},
+{type:"mcq", q:"Publishing an application's data as a REST service typically requires which annotations?", options:["@RequestMapping only","@PathVariable only","Both @RequestMapping and @PathVariable","Neither of the mentioned"], correct:2},
+{type:"mcq", q:"Which annotation is added as an input parameter to a handler method to bind a URI template variable?", options:["@PathVariable","@Path","@PathLocale","None of the mentioned"], correct:0},
+{type:"mcq", q:"Which statement is true regarding @ResponseStatus?", options:["@ResponseStatus is detected on nested exceptions","It is only for @RequestMapping methods, never exception classes","RedirectView status always overrides it","It cannot be applied to a business exception class"], correct:0},
+{type:"mcq", q:"What is the default localeResolver used by Spring?", options:["AcceptHeaderLocale","AcceptHeader","AcceptHeaderLocaleResolver","AcceptLocaleResolver"], correct:2},
+{type:"mcq", q:"Which is an alternative way to resolve locales?", options:["AcceptHeaderLocale","AcceptHeader","AcceptHeaderLocaleResolver","SessionLocaleResolver"], correct:3},
+{type:"mcq", q:"Which general-purpose class allows a response to be rendered using a marshaller?", options:["MarshallingView","Marshalling","View","All of the mentioned"], correct:0},
+{type:"mcq", q:"Which annotation allows the Jaxb2Marshaller to detect a class's fields?", options:["@XmlRootElement","@XmlRoot","@NotNull","None of the mentioned"], correct:0},
+{type:"mcq", q:"How can you auto-inject a Spring bean into a field by its name?", options:["By using both @Autowired and @Qualifier together","By naming the field with the bean name alone (no annotation)","With a name attribute on @Autowired","By using @Qualifier alone with no @Autowired"], correct:0},
+{type:"mcq", q:"Two unrelated classes AccountServiceImpl and ClientServiceImpl. What does this pointcut match? execution(* *..AccountServiceImpl.update(..)) && execution(* *..ClientServiceImpl.update(..))", options:["No join point is defined","Matches public update methods of both classes","Matches any update methods of both classes regardless of visibility","Matches update methods with one extra argument"], correct:0},
+{type:"mcq", q:"ApplicationContext context = new ClassPathXmlApplicationContext(\"classpath:/com.example.myapp.config.xml\"); — which statement is correct?", options:["All of the listed statements are true","The classpath: prefix could be omitted","The dotted package name is not well formatted","The leading slash could be omitted"], correct:0},
+{type:"mcq", code:'@Pointcut("execution(* *(..))")\nprivate void anyOperation() {}', q:"Using Spring AOP, what is the visibility of methods matched by this join point?", options:["Public methods","All methods regardless of visibility","All methods except private methods","Protected and public methods only"], correct:0},
+{type:"mcq", code:'@Configuration\npublic class ApplicationConfig {\n  @Autowired\n  private DataSource dataSource;\n  @Bean\n  ClientRepository clientRepository() {\n    ClientRepository accountRepository = new JpaClientRepository();\n    accountRepository.setDataSource(dataSource);\n    return accountRepository;\n  }\n}', q:"What is the name of the bean defined in this configuration class?", options:["clientRepository","JpaClientRepository","jpaClientRepository","Two beans are defined: a DataSource and a repository"], correct:0},
+{type:"mcq", code:'@RestController\npublic class OwnerController {\n  @RequestMapping(value = "/owner/{ownerId}", method = RequestMethod.POST)\n  @ResponseBody\n  public Owner findOwner(@PathVariable("ownerId") int ownerId) {\n    return new Owner();\n  }\n}', q:"Which statement is true regarding this Spring controller?", options:["RequestMethod.GET would be more accurate than POST here","@ResponseBody could be removed with no effect","@PathVariable should be @PathParam instead","Returning HTTP 201 would be better"], correct:0},
+{type:"mcq", q:"What is an 'advice' in AOP?", options:["An action taken by an aspect at a particular join point","A point during the execution of a program","An aspect and a pointcut combined","A predicate that matches join points"], correct:0},
+{type:"mcq", code:'@RequestMapping("/displayAccount")\nString displayAccount(@RequestParam("accountId") int id, Model model)', q:"Which of the following is the easiest signature to unit test?", options:["This one — a plain method taking simple params and a Model","A method taking HttpServletRequest/HttpServletResponse","A method taking HttpServletRequest/HttpSession","A method using @PathVariable instead of @RequestParam changes nothing"], correct:0},
+{type:"mcq", q:"Which method signature matches the pointcut execution(* com.test.service..*.*(*))?", options:["void com.test.service.MyServiceImpl#transfert(Money amount)","void com.test.service.account.MyServiceImpl#transfert(Money amount)","void com.test.service.MyServiceImpl#transfert(Account account, Money amount)","void com.test.service.account.MyServiceImpl#transfert(Account account, Money amount)"], correct:0},
+{type:"mcq", code:'<bean class="com.spring.service.BankServiceImpl"\n      p:bankName="NationalBank">\n</bean>', q:"Which statement about this configuration is correct?", options:["The p namespace has to be declared for p:bankName to work","NationalBank is a bean reference, not a scalar value","The bean id is bankServiceImpl","BankServiceImpl references a NationalBank bean"], correct:0},
+{type:"mcq", code:'public class ApplicationConfig {\n  private DataSource dataSource;\n  @Autowired\n  public ApplicationConfig(DataSource dataSource) {\n    this.dataSource = dataSource;\n  }\n  @Bean(name="clientRepository")\n  ClientRepository jpaClientRepository() {\n    return new JpaClientRepository();\n  }\n}', q:"What is missing/wrong with this configuration class?", options:["The @Configuration annotation is missing","A default/no-arg constructor is missing","The @Bean name is ambiguous","The @Bean scope is prototype by mistake"], correct:0},
+{type:"mcq", q:"Using JdbcTemplate, which Spring-provided class is used for result set parsing, merging rows into a single object?", options:["ResultSetExtractor","RowMapper","RowCallbackHandler","ResultSetMapper"], correct:0}
+]},
+
+{ id:"spring-core2", title:"Spring Core & Bean Configuration (Set 2)", items:[
+{type:"mcq", q:"Which class loads the root application context at startup?", options:["ContextListener","ContextLoader","ContextLoaderListener","ContextEventListener"], correct:2},
+{type:"mcq", q:"Which ActionSupport method is used to access Spring's application context?", options:["getWebApplicationContext()","getWebApplication()","getApplicationContext()","contextEventListener()"], correct:0},
+{type:"mcq", q:"Which XML element specifies property values for a scripting bean?", options:["lang:property","bean:property","script:property","None of the mentioned"], correct:0},
+{type:"mcq", q:"Which annotation is used to declare an introduction in AOP?", options:["@Before","@After","@DeclareParents","None of the mentioned"], correct:2},
+{type:"mcq", q:"Is this pointcut expression correct on its own? execution(* ArithmeticCalculator.*(..))", options:["Yes, always","No, never","Only if every target class is in the same (default) package","Depends on where the target class is located, regardless of package"], correct:2},
+{type:"mcq", q:"DAO methods require access to the session factory, which can be injected via:", options:["A setter method only","A constructor argument only","None of the mentioned","All of the mentioned (setter or constructor)"], correct:3},
+{type:"mcq", q:"Which Java Collection types can you inject in a Spring application?", options:["Using lit, set, map or collection tag","Using list, set, props or collection tag","Using list, set, map or props tag","Using list, collection, map or props tag"], correct:2},
+{type:"mcq", q:"What are the different types of AutoProxying in Spring?", options:["BeanNameAutoProxyCreator only","DefaultAdvisorAutoProxyCreator only","Metadata autoproxying only","All of the above"], correct:3},
+{type:"mcq", q:"What are the various property editors used in Spring?", options:["PropertyEditor, URLEditor only","ClassEditor, CustomDateEditor, StringTrimmerEditor only","FileEditor, LocaleEditor, StringArrayPropertyEditor only","All of the above"], correct:3},
+{type:"mcq", q:"How is <ref> used in the Spring framework?", options:["<ref> is used with a bean id","<ref> is used with string values","Both of the above","Neither of the above"], correct:0},
+{type:"mcq", q:"How do you define an inner bean in Spring?", options:["Use <property/> only","Use <property/> or <constructor-arg/>","Use <constructor-arg/> only","Inner beans aren't supported"], correct:1},
+{type:"mcq", q:"Which element is replaced by the c-namespace in Spring?", options:["<property/>","<constructor-arg>","<bean/>","<ref/>"], correct:1},
+{type:"mcq", q:"By default, is a bean eagerly initialized in Spring?", options:["True","False"], correct:0},
+{type:"mcq", q:"By default, is a bean NOT autowired in Spring?", options:["True — autowiring is off by default","False"], correct:1},
+{type:"mcq", q:"Can the subclass that the Spring container generates (e.g. via CGLIB proxying) be created from a final class?", options:["No","Yes"], correct:0},
+{type:"mcq", q:"What is the scope of a stateful bean in Spring?", options:["Singleton scope","Prototype scope"], correct:1},
+{type:"mcq", q:"In which Spring scope is a single bean instance created per IoC container?", options:["Singleton scope","Request scope"], correct:0},
+{type:"mcq", q:"In which Spring scope can any number of instances of a bean be created?", options:["Request scope","Prototype scope"], correct:1},
+{type:"mcq", q:"When a bean's scope is limited to only one HTTP request, that is called:", options:["Request scope","Session scope"], correct:0},
+{type:"mcq", q:"When a bean's scope is limited to an HTTP session, that is called:", options:["Request scope","Session scope"], correct:1},
+{type:"mcq", q:"Thread scope for beans was introduced in Spring from which version?", options:["Spring 2.5","Spring 3.0"], correct:1},
+{type:"mcq", q:"InitializingBean and DisposableBean are used to customize the lifecycle nature of a bean in Spring. True or false?", options:["Yes","No"], correct:0},
+{type:"mcq", q:"How do you shut down the Spring IoC container gracefully in non-web applications?", options:["Using shutdownNow()","registerShutdownHook()"], correct:1},
+{type:"mcq", q:"Which is correct about dependency injection?", options:["It helps decouple application objects from each other","It helps decide the dependencies of objects","It stores object states in a database","It stores object states in the file system"], correct:0},
+{type:"mcq", q:"Which are the correct implementation classes of ApplicationContext?", options:["FileSystemXmlApplicationContext, ClassPathXmlApplicationContext, WebXmlApplicationContext","FileSystemApplicationContext, ClassPathApplicationContext, WebApplicationContext","AdvancedApplicationContext, FileApplicationContext","FileSystemApplicationContext, ClassPathApplicationContext"], correct:0},
+{type:"mcq", q:"What is the Spring MVC framework?", options:["A Model-Value-Class architecture used to bind model data with values","Provides model-view-controller architecture with ready components for flexible, loosely coupled web apps","Used for transaction management for web applications","Used for AOP for web applications"], correct:1},
+{type:"mcq", q:"How can you reload your changes on Spring Boot without restarting the server?", options:["Add the spring-boot-devtools dependency","Add the spring-boot-test dependency","Add the spring-boot-web dependency","Add the spring-boot-jasper dependency"], correct:0},
+{type:"mcq", q:"Which annotation adds security to your Spring Boot app?", options:["@EnableWebSecurity","@EnableSecurity","@EnableSpringSecurity"], correct:0},
+{type:"mcq", q:"What are the different implementations of Spring AOP?", options:["AspectJ only","Spring AOP only","JBoss AOP only","All of the above"], correct:3},
+{type:"mcq", q:"How does Spring Batch work (core components)?", options:["step, ItemReader, ItemProcessor, ItemStreamWriter","step, ItemProcessor, ItemStreamWriter","step, ItemReader, ItemStreamWriter"], correct:0},
+{type:"mcq", q:"A LoggerInterceptor implementing HandlerInterceptor overrides which methods?", options:["preHandlerBean(), postHandlerBean(), afterCompletion()","PreProcessHandler(), PostProcessHandler(), afterCompletion()","preHandle(), postHandle(), afterCompletion()","None of the above"], correct:2}
+]},
+
+{ id:"java-core", title:"Java Core — Code Output & Concepts", items:[
+{type:"mcq", code:'class Animal {\n  public String noise() { return "peep"; }\n}\nclass Dog extends Animal {\n  public String noise() { return "bark"; }\n}\nclass Cat extends Animal {\n  public String noise() { return "meow"; }\n}\n...\nAnimal animal = new Dog();\nCat cat = (Cat) animal;\nSystem.out.println(cat.noise());', q:"What is the result?", options:["peep","bark","meow","An exception is thrown at runtime"], correct:3},
+{type:"mcq", code:'class A {\n  void foo() throws Exception { throw new Exception(); }\n}\nclass SubB2 extends A {\n  void foo() { System.out.println("B "); }\n}\nclass Tester {\n  public static void main(String[] args) {\n    A a = new SubB2();\n    a.foo();\n  }\n}', q:"What is the result?", options:["B","B, followed by an Exception","Compilation fails due to an error on line 9","Compilation fails: unhandled exception type Exception on the call to a.foo()"], correct:3},
+{type:"mcq", q:"Which of these keywords cannot be used for a class that has been declared final?", options:["abstract","extends","Both abstract and extends","None of the mentioned"], correct:0},
+{type:"mcq", q:"A team reviewing a class design realizes other classes can access methods that should only be accessible within the utility class itself. What design issue is this?", options:["Tight coupling","Low cohesion","High cohesion","Weak encapsulation"], correct:3},
+{type:"mcq", code:'class Mammal {}\nclass Raccoon extends Mammal {\n  Mammal m = new Mammal();\n}\nclass BabyRaccoon extends Mammal {}', q:"Which of these are true? (multiple correct — select the most complete option)", options:["Raccoon is-a Mammal; Raccoon has-a Mammal; BabyRaccoon is-a Mammal; BabyRaccoon is-a BabyRaccoon","Only Raccoon is-a Mammal","BabyRaccoon is-a Raccoon","None of the above"], correct:0},
+{type:"mcq", code:'StringBuffer s1 = new StringBuffer("Hello World");\ns1.insert(6, "Good ");\nSystem.out.println(s1);', q:"What is the output?", options:["HelloGoodWorld","HellGoodoWorld","HellGood oWorld","Hello Good World"], correct:3},
+{type:"mcq", q:"The sendError() method of HttpServletResponse is equivalent to invoking setStatus() with which parameter?", options:["SC_OK","SC_MOVED_TEMPORARILY","SC_NOT_FOUND","SC_INTERNAL_SERVER_ERROR"], correct:2},
+{type:"mcq", q:"The sendRedirect() method of HttpServletResponse is equivalent to invoking setStatus() with which parameter (plus a Location header)?", options:["SC_OK","SC_MOVED_TEMPORARILY","SC_NOT_FOUND","SC_INTERNAL_SERVER_ERROR"], correct:1},
+{type:"mcq", code:'Vector obj = new Vector(4, 2);\nobj.addElement(new Integer(3));\nobj.addElement(new Integer(2));\nobj.addElement(new Integer(5));\nobj.removeAll(obj);\nSystem.out.println(obj.isEmpty());', q:"What is the output of this program?", options:["0","1","true","false"], correct:2},
+{type:"mcq", code:'TreeMap obj = new TreeMap();\nobj.put("A", new Integer(1));\nobj.put("B", new Integer(2));\nobj.put("C", new Integer(3));\nSystem.out.println(obj.entrySet());', q:"What is the output of this program?", options:["[A, B, C]","[1, 2, 3]","{A=1, B=2, C=3}","[A=1, B=2, C=3]"], correct:3},
+{type:"mcq", code:'BitSet obj = new BitSet(5);\nfor (int i = 0; i < 5; ++i) obj.set(i);\nobj.clear(2);\nSystem.out.print(obj);', q:"What is the output of this program?", options:["{0, 1, 3, 4}","{0, 1, 2, 4}","{0, 1, 2, 3, 4}","{0, 0, 0, 3, 4}"], correct:0},
+{type:"mcq", code:'int array[] = new int[5];\nfor (int i = 5; i > 0; i--) array[5-i] = i;\nArrays.fill(array, 1, 4, 8);\nfor (int i = 0; i < 5; i++) System.out.print(array[i]);', q:"What is the output of this program?", options:["12885","12845","58881","54881"], correct:2},
+{type:"mcq", code:'LinkedList list = new LinkedList();\nlist.add(2); list.add(8); list.add(5); list.add(1);\nIterator i = list.iterator();\nCollections.reverse(list);\nCollections.shuffle(list);\nwhile(i.hasNext()) System.out.print(i.next() + " ");', q:"What is the output of this program?", options:["2 8 5 1","1 5 8 2","1 2 5 8","Any random order (iterator was taken before the shuffle, output is unpredictable)"], correct:3},
+{type:"mcq", code:'LinkedList list = new LinkedList();\nlist.add(2); list.add(8); list.add(5); list.add(1);\nIterator i = list.iterator();\nCollections.reverse(list);\nCollections.sort(list);\nwhile(i.hasNext()) System.out.print(i.next() + " ");', q:"What is the output of this program?", options:["2 8 5 1","1 5 8 2","1 2 5 8","2 1 8 5"], correct:2},
+{type:"mcq", code:'genericstack<String> gs = new genericstack<String>();\ngs.push("Hello");\nSystem.out.print(gs.pop() + " ");\ngenericstack<Integer> gs2 = new genericstack<Integer>();\ngs2.push(36);\nSystem.out.println(gs2.pop());', q:"What is the output of this generic-stack program?", options:["Error","Hello","36","Hello 36"], correct:3},
+{type:"mcq", code:'StringBuffer c = new StringBuffer("Hello");\nStringBuffer c1 = new StringBuffer(" World");\nc.append(c1);\nSystem.out.println(c);', q:"What is the output of this program?", options:["Hello","World","Helloworld","Hello World"], correct:3},
+{type:"mcq", code:'StringBuffer s1 = new StringBuffer("Hello");\ns1.setCharAt(1, \'x\');\nSystem.out.println(s1);', q:"What is the output of this program?", options:["xello","xxxxx","Hxllo","Hexlo"], correct:2},
+{type:"mcq", code:'String s1 = "one";\nString s2 = s1 + " two";\nSystem.out.println(s2);', q:"What is the output of this program?", options:["one","two","one two","Compilation error"], correct:2},
+{type:"mcq", code:'try {\n  System.out.print("Hello" + " " + 1 / 0);\n} catch (ArithmeticException e) {\n  System.out.print("World");\n}', q:"What is the output of this program?", options:["Hello","World","HelloWorld","Hello World"], correct:1},
+{type:"mcq", code:'char c[] = {\'a\', \'1\', \'b\', \' \', \'A\', \'0\'};\nfor (int i = 0; i < 5; ++i) {\n  if (Character.isDigit(c[i])) ...\n  if (Character.isWhitespace(c[i])) ...\n  if (Character.isUpperCase(c[i])) ...\n  if (Character.isLowerCase(c[i])) ...\n  i = i + 3;\n}', q:"Which output pattern is correct (checking indices 0 and 4 due to i += 3)?", options:["'a' is a lower case letter / 'A' is an upper case letter","'b' is a lower case letter / whitespace","'a' is a lower case letter / whitespace character","'a' is a lower case letter / '0' is a digit"], correct:0},
+{type:"mcq", q:"What is the correct sequence for making a JDBC database connection?", options:["Load driver → Process results → Make connection → Execute SQL","Load driver → Make connection → Execute SQL → Process results","Process results → Load driver → Make connection → Execute SQL","Execute SQL → Load driver → Process results → Make connection"], correct:1},
+{type:"mcq", q:"InputStream obj = new FileInputStream(\"inputoutput.java\"); System.out.print(obj.available()); — what does this print?", options:["true","false","The number of bytes available to read from the file","The number of characters in the file"], correct:2},
+{type:"mcq", q:"Which JDBC transaction isolation level allows non-repeatable reads?", options:["TRANSACTION_READ_UNCOMMITTED","TRANSACTION_READ_COMMITTED","TRANSACTION_SERIALIZABLE","TRANSACTION_REPEATABLE_READ"], correct:1},
+{type:"mcq", q:"Which of the following is NOT a valid HTTP/1.1 method?", options:["CONNECT method","COMPARE method","OPTIONS method","TRACE method"], correct:1},
+{type:"mcq", q:"Which is NOT a valid value for the <dispatcher> element of a filter-mapping in web.xml?", options:["FORWARD","RESPONSE","INCLUDE","ERROR"], correct:1},
+{type:"mcq", q:"Where are compiled class files located within a WAR file?", options:["/META-INF/classes","/classes","/WEB-INF/classes","/root/classes"], correct:2}
+]},
+
+{ id:"docker", title:"Docker — Concepts", items:[
+{type:"mcq", q:"What kind of information does 'docker system df' show you?", options:["Container network settings","Disk usage of images, containers, and volumes","Docker daemon version","Running container CPU usage"], correct:1},
+{type:"mcq", q:"Which Dockerfile instruction initializes a new build stage and sets the base image?", options:["FROM","BASE","RUN","IMAGE"], correct:0},
+{type:"mcq", q:"Which service mode deploys a single task of a service to each node in a swarm?", options:["Replicated","Global","Constrained","Local"], correct:1},
+{type:"mcq", q:"Which description best fits a DaemonSet?", options:["A way to run a copy of a pod on all or some nodes","A load balancer for services","A storage class for persistent volumes","A single long-running batch job"], correct:0},
+{type:"mcq", q:"What is the default format of `docker inspect` output?", options:["YAML","JSON","XML","Plain text"], correct:1},
+{type:"mcq", q:"What does `docker image prune` do?", options:["Removes all containers","Removes unused (dangling) images","Removes all volumes","Removes all networks"], correct:1},
+{type:"mcq", q:"What is the difference between ADD and COPY in a Dockerfile?", options:["ADD supports remote URL handling and auto-extraction, COPY does not","COPY supports remote URLs, ADD does not","There is no difference","ADD only works with directories, COPY only with files"], correct:0},
+{type:"mcq", q:"What does the Dockerfile LABEL instruction do?", options:["Adds metadata (key/value) to an image","Sets an environment variable","Defines a build argument","Exposes a network port"], correct:0},
+{type:"mcq", q:"What does the Dockerfile EXPOSE instruction do?", options:["Publishes the port to the host automatically","Informs Docker that the container listens on the specified port (documentation only, unless combined with -p)","Opens a firewall rule on the host","Creates a new network"], correct:1},
+{type:"mcq", q:"What is true about using the `-P` (capital) option with `docker run`?", options:["It disables all networking","Docker binds each exposed container port to a random host port","It pulls the image before running","It runs the container in privileged mode"], correct:1},
+{type:"mcq", q:"Which Docker commands can be used to find all port mappings for a container?", options:["docker inspect, docker ps, docker port","docker network ls only","docker top only","docker stats only"], correct:0},
+{type:"mcq", q:"Which is NOT a valid way to tag a Docker image?", options:["Tag by repository:tag name","Tag by image ID alone as if it were a repository name","Tag during build with -t","Tag an existing image with `docker tag`"], correct:1}
+]},
+
+{ id:"k8s", title:"Kubernetes & OpenShift — Concepts", items:[
+{type:"mcq", q:"In Kubernetes, a node is:", options:["A worker machine that runs pods","A container image registry","A single pod","A cluster-wide configuration file"], correct:0},
+{type:"mcq", q:"What is a label in Kubernetes?", options:["A container's log file","A way to group and select related objects using key/value pairs","A network policy rule","A type of persistent volume"], correct:1},
+{type:"mcq", q:"What manages assigning pods to nodes depending on resource availability?", options:["The Scheduler","The Kubelet","etcd","The Ingress Controller"], correct:0},
+{type:"mcq", q:"What can you deploy on Kubernetes?", options:["Only virtual machines","Containers (packaged as pods)","Only bare-metal servers","Only serverless functions"], correct:1},
+{type:"mcq", q:"Which command is used to create a Service in Kubernetes?", options:["kubectl expose","kubectl create service-only","kubectl deploy","kubectl attach"], correct:0},
+{type:"mcq", q:"What is the function of a node in a Kubernetes cluster?", options:["To store cluster configuration only","To run pods according to instructions from the master/control-plane components","To act only as a DNS server","To manage user authentication"], correct:1},
+{type:"mcq", q:"OpenShift is built on top of which container orchestration platform?", options:["Docker Swarm","Kubernetes","Apache Mesos","Nomad"], correct:1},
+{type:"mcq", q:"What is a Pod in Kubernetes?", options:["A single running container with no networking","A group of one or more application containers with shared storage/volumes and a shared IP address","A worker node","A persistent volume claim"], correct:1},
+{type:"mcq", q:"A ______ ensures that all (or some) nodes run a copy of a pod.", options:["Deployment","ReplicaSet","DaemonSet","StatefulSet"], correct:2},
+{type:"mcq", q:"What is a Kubernetes Volume?", options:["A directory containing data, accessible to the containers in a pod","A type of Service","A CPU/memory resource limit","A network interface"], correct:0},
+{type:"mcq", q:"What is a kubelet?", options:["A load balancer for services","A node agent that manages pods and their containers on a node","The central API server","A CLI tool for developers only"], correct:1},
+{type:"mcq", q:"What is etcd used for in Kubernetes?", options:["To store all cluster data and maintain cluster state","To run application containers","To route external traffic","To build container images"], correct:0},
+{type:"mcq", q:"At its core, Kubernetes is a platform for:", options:["Running and scheduling container applications on a cluster","Building container images","Managing relational databases","Serving static websites"], correct:0},
+{type:"mcq", q:"What runs on each node to ensure containers are running as expected within a pod?", options:["kubelet","etcd","kube-scheduler","kube-apiserver"], correct:0},
+{type:"mcq", q:"What is a 'cluster' in this context?", options:["A single system made up of several other resources (nodes) working together","A single standalone container","A single Dockerfile","A single persistent volume"], correct:0},
+{type:"mcq", q:"What is a proxy service used for (e.g. kube-proxy)?", options:["To act as an intermediary between endpoint servers/services and route traffic","To compile source code","To store cluster secrets","To build Docker images"], correct:0},
+{type:"mcq", q:"Which servers run the Kubernetes control-plane components in OpenShift?", options:["Workers","Masters","Registries","Routers"], correct:1},
+{type:"mcq", q:"Which resource sets default request/limit values for containers in a namespace?", options:["ResourceQuota","LimitRange","PodDisruptionBudget","NetworkPolicy"], correct:1},
+{type:"mcq", q:"What is the purpose of a ReplicaSet?", options:["To ensure a specified number of pod replicas are running at any given time","To store persistent data","To expose a pod externally","To schedule cron jobs"], correct:0},
+{type:"mcq", q:"What is the mission of the control plane?", options:["To regulate/coordinate communication and scheduling across the Kubernetes cluster","To store container images","To run user application code directly","To provide DNS resolution only"], correct:0}
+]},
+
+];
+
+/* Flashcards: shorter reference facts and command-style answers without clean MCQ options */
+const FLASH = [
+{section:"Java Core Quick Facts", q:"What type of exceptions are ArithmeticException and IOException?", a:"Per this study set: treated as runtime-type errors (note: strictly, IOException is a checked exception in real Java — worth double-checking against the JLS)."},
+{section:"Java Core Quick Facts", q:"What are the implicit objects available in a JSP page?", a:"request, response, session, application, out, config, page, pageContext, exception — the study notes highlight 'page' and 'this' among them."},
+{section:"Java Core Quick Facts", q:"What is the range of valid HTTP success status codes?", a:"200–299."},
+{section:"Java Core Quick Facts", q:"What is the superclass of all classes in Java?", a:"java.lang.Object"},
+{section:"Java Core Quick Facts", q:"Which Thread method/state is used to mark a thread as a background thread that doesn't block JVM exit?", a:"setDaemon(true) — making it a daemon thread."},
+{section:"Java Core Quick Facts", q:"Which package does JDBC belong to?", a:"java.sql.* (and javax.sql.* for extensions)."},
+{section:"Java Core Quick Facts", q:"Which of Java's basic types is NOT a primitive?", a:"String — it's a reference type, not a primitive."},
+{section:"Java Core Quick Facts", q:"println() belongs to which class?", a:"java.io.PrintStream"},
+{section:"Java Core Quick Facts", q:"Does a void method return a value?", a:"No — void methods return nothing."},
+{section:"Java Core Quick Facts", q:"Which String method reverses a string's characters?", a:"Use new StringBuilder(str).reverse().toString() — String itself has no reverse() method."},
+{section:"Java Core Quick Facts", q:"Which class does an HTTP session (getSession()) belong to?", a:"javax.servlet.http.HttpServletRequest exposes getSession(); the session itself is an HttpSession object."},
+{section:"Java Core Quick Facts", q:"How do you create a copy of an object in Java?", a:"Implement Cloneable and override clone(), or use a copy constructor / serialization-based deep copy."},
+{section:"Java Core Quick Facts", q:"class.forName() throws which checked exception if the class isn't found?", a:"ClassNotFoundException"},
+{section:"Java Core Quick Facts", q:"Which RandomAccessFile method sets the new file-pointer position?", a:"seek(long pos)"},
+{section:"Servlet & JSP Facts", q:"Which listener interface fires on servlet request lifecycle events?", a:"ServletRequestListener"},
+{section:"Servlet & JSP Facts", q:"Which listener interface fires when HttpSession attributes are bound/unbound?", a:"HttpSessionAttributeListener"},
+{section:"Servlet & JSP Facts", q:"Which listener interface fires on HttpSession creation/destruction?", a:"HttpSessionListener"},
+{section:"Servlet & JSP Facts", q:"Which listener interface fires on ServletContext lifecycle events (app startup/shutdown)?", a:"ServletContextListener"},
+{section:"Servlet & JSP Facts", q:"How do you separate multiple parameters in a URL query string (GET request)?", a:"With the & character (e.g. ?a=1&b=2); the ? separates the path from the query string itself."},
+{section:"Servlet & JSP Facts", q:"How would you start a thread from a class implementing Runnable?", a:"new Thread(new MyRunnable()).start(); — Runnable has no start() of its own, so it must be wrapped in a Thread."},
+{section:"Servlet & JSP Facts", q:"What tag in <jsp:setProperty property=\"*\"> does?", a:"Sets the values of all matching bean properties from request parameters with the same names."},
+{section:"Docker Commands", q:"After running `docker swarm leave` on a node, how can you confirm it left the cluster?", a:"Check with `docker info` (look at the Swarm section) — this study set lists `docker system info`."},
+{section:"Docker Commands", q:"How do you automatically create a volume when starting a container?", a:"docker container run --name nginx-test --volume /app nginx"},
+{section:"Docker Commands", q:"What's the command to add or update a published port on a running swarm service?", a:"docker service update --publish-add <port>"},
+{section:"Docker Commands", q:"How do you connect a running container to an existing user-defined bridge network?", a:"docker network connect <network> <container>"},
+{section:"Docker Commands", q:"How do you display detailed information on one or more Docker networks?", a:"docker network inspect <network>"},
+{section:"Docker Commands", q:"How do you find the current logging driver for a running container?", a:"docker inspect <container> (look at the HostConfig.LogConfig section)"},
+{section:"Docker Commands", q:"How do you see which storage driver Docker is currently using?", a:"docker info"},
+{section:"Docker Commands", q:"How do you display the layer history of a Docker image?", a:"docker history <image>"},
+{section:"Docker Commands", q:"How do you scale the number of replicas for a Docker service?", a:"docker service scale <service>=<replicas>"},
+{section:"Docker Commands", q:"How do you update an existing Docker service (image, env vars, etc.)?", a:"docker service update <service>"},
+{section:"Docker Commands", q:"How do you create a user-defined bridge network?", a:"docker network create <name>"},
+{section:"Docker Commands", q:"How do you display the Docker configuration/info of the host?", a:"docker info"},
+{section:"Docker Commands", q:"What does `kubectl exec -ti my-pod-name bash` do?", a:"Opens an interactive bash shell/console inside the first container of that pod."},
+{section:"Docker Commands", q:"How do you show volumes attached to a specific container?", a:"docker inspect <container> (see the Mounts section)"},
+{section:"OpenShift Commands", q:"How do you remove the cluster-admin role from a user in OpenShift?", a:"oc adm policy remove-cluster-role-from-user cluster-admin <user>"},
+{section:"OpenShift Commands", q:"How do you grant a group edit access to a project/namespace in OpenShift?", a:"oc adm policy add-role-to-group edit <group> -n <namespace>"},
+{section:"General DevOps", q:"What's the default port to access the WebSphere Application Server admin console?", a:"9080 (HTTP) / 9443 for HTTPS admin console — this set lists 9080."},
+];
+
+let mcqIndex = 0;
+const totalMcq = () => DATA.reduce((sum,s)=>sum+s.items.length,0);
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function renderQuestion(sectionId, item, localIndex){
+  const gid = `${sectionId}-q${localIndex}`;
+  mcqIndex++;
+  const codeHtml = item.code ? `<pre>${esc(item.code)}</pre>` : '';
+  const optsHtml = item.options.map((opt,i)=>{
+    const letter = String.fromCharCode(65+i);
+    return `<label class="opt" data-idx="${i}" id="${gid}-opt${i}">
+      <input type="radio" name="${gid}" value="${i}" onchange="onSelect('${gid}')">
+      <span class="lab">${letter}</span><span>${esc(opt)}</span>
+      <span class="icon"></span>
+    </label>`;
+  }).join('');
+  return `
+  <div class="card" id="${gid}-card" data-correct="${item.correct}">
+    <div class="qhead">
+      <span class="qnum">Q${mcqIndex}</span>
+      <div class="qtext">${esc(item.q)}${codeHtml}</div>
+    </div>
+    <div class="options">${optsHtml}</div>
+    <div class="feedback" id="${gid}-fb"></div>
+  </div>`;
+}
+
+function renderFlash(card, i){
+  const gid = `flash-${i}`;
+  const codeHtml = card.code ? `<pre>${esc(card.code)}</pre>` : '';
+  return `
+  <div class="flash">
+    <div class="qhead">
+      <span class="qnum" style="color:var(--amber);background:rgba(232,179,57,.13);">REF</span>
+      <div class="qtext">${esc(card.q)}${codeHtml}</div>
+    </div>
+    <div class="flash-toggle" onclick="toggleFlash('${gid}')">▸ Show answer</div>
+    <div class="flash-answer" id="${gid}">${esc(card.a)}</div>
+  </div>`;
+}
+
+function toggleFlash(gid){
+  const el = document.getElementById(gid);
+  el.classList.toggle('show');
+}
+
+function buildPage(){
+  const root = document.getElementById('quizRoot');
+  const nav = document.getElementById('sectionNav');
+  let html = '';
+  let navHtml = '';
+
+  DATA.forEach(section=>{
+    navHtml += `<div class="chip" onclick="scrollToSection('${section.id}')">${esc(section.title)}</div>`;
+    html += `<div class="section" id="${section.id}">
+      <div class="section-head"><h2>${esc(section.title)}</h2><span class="tag">${section.items.length} questions</span></div>`;
+    section.items.forEach((item, i)=>{
+      html += renderQuestion(section.id, item, i);
+    });
+    html += `</div>`;
+  });
+
+  // Flashcards grouped
+  const flashGroups = {};
+  FLASH.forEach(f=>{ (flashGroups[f.section] = flashGroups[f.section]||[]).push(f); });
+  Object.keys(flashGroups).forEach(secName=>{
+    const sid = 'flash-' + secName.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+    navHtml += `<div class="chip" onclick="scrollToSection('${sid}')">${esc(secName)}</div>`;
+    html += `<div class="section" id="${sid}">
+      <div class="section-head"><h2>${esc(secName)}</h2><span class="tag">${flashGroups[secName].length} flashcards</span></div>`;
+    flashGroups[secName].forEach((card,i)=>{ html += renderFlash(card, secName+i); });
+    html += `</div>`;
+  });
+
+  root.innerHTML = html;
+  nav.innerHTML = navHtml;
+
+  document.getElementById('statTotal').textContent = totalMcq();
+  document.getElementById('statFlash').textContent = FLASH.length;
+  updateStats();
+}
+
+function scrollToSection(id){
+  document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function onSelect(gid){
+  // live-update answered count
+  updateStats();
+}
+
+function updateStats(){
+  const total = totalMcq();
+  let answered = 0;
+  document.querySelectorAll('.card').forEach(card=>{
+    const name = card.querySelector('input[type=radio]').name;
+    if(document.querySelector(`input[name="${name}"]:checked`)) answered++;
+  });
+  document.getElementById('statAnswered').textContent = answered;
+}
+
+function checkAll(){
+  let score = 0;
+  document.querySelectorAll('.card').forEach(card=>{
+    const correctIdx = parseInt(card.dataset.correct,10);
+    const name = card.querySelector('input[type=radio]').name;
+    const checked = document.querySelector(`input[name="${name}"]:checked`);
+    const fb = card.querySelector('.feedback');
+    // reset option classes
+    card.querySelectorAll('.opt').forEach(o=>o.classList.remove('marked-correct','marked-wrong'));
+    card.querySelectorAll('.opt .icon').forEach(ic=>ic.textContent='');
+
+    const correctOpt = card.querySelector(`.opt[data-idx="${correctIdx}"]`);
+    if(!checked){
+      card.classList.remove('correct','incorrect');
+      fb.classList.remove('show','ok','no');
+      return;
+    }
+    const chosenIdx = parseInt(checked.value,10);
+    const chosenOpt = card.querySelector(`.opt[data-idx="${chosenIdx}"]`);
+    if(chosenIdx === correctIdx){
+      score++;
+      card.classList.add('correct'); card.classList.remove('incorrect');
+      chosenOpt.classList.add('marked-correct');
+      chosenOpt.querySelector('.icon').textContent = '✓';
+      fb.textContent = '✓ Correct!';
+      fb.className = 'feedback show ok';
+    } else {
+      card.classList.add('incorrect'); card.classList.remove('correct');
+      chosenOpt.classList.add('marked-wrong');
+      chosenOpt.querySelector('.icon').textContent = '✗';
+      correctOpt.classList.add('marked-correct');
+      correctOpt.querySelector('.icon').textContent = '✓';
+      fb.textContent = '✗ Not quite — correct answer highlighted above.';
+      fb.className = 'feedback show no';
+    }
+  });
+  document.getElementById('statScore').textContent = score;
+  updateStats();
+}
+
+function revealAll(){
+  document.querySelectorAll('.card').forEach(card=>{
+    const correctIdx = parseInt(card.dataset.correct,10);
+    card.querySelectorAll('.opt').forEach(o=>o.classList.remove('marked-correct','marked-wrong'));
+    const correctOpt = card.querySelector(`.opt[data-idx="${correctIdx}"]`);
+    correctOpt.classList.add('marked-correct');
+    correctOpt.querySelector('.icon').textContent = '✓ correct answer';
+  });
+  document.querySelectorAll('.flash-answer').forEach(el=>el.classList.add('show'));
+}
+
+function resetAll(){
+  document.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false);
+  document.querySelectorAll('.opt').forEach(o=>o.classList.remove('marked-correct','marked-wrong'));
+  document.querySelectorAll('.opt .icon').forEach(ic=>ic.textContent='');
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('correct','incorrect'));
+  document.querySelectorAll('.feedback').forEach(f=>{f.classList.remove('show','ok','no'); f.textContent='';});
+  document.querySelectorAll('.flash-answer').forEach(el=>el.classList.remove('show'));
+  document.getElementById('statScore').textContent = '0';
+  updateStats();
+}
+
+buildPage();
+</script>
+</body>
+</html>
